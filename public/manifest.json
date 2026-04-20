@@ -1,0 +1,17 @@
+{
+  "name": "KOD Boss Panel",
+  "short_name": "KOD Boss",
+  "description": "King of Delancey Boss Management Panel",
+  "start_url": "/boss",
+  "display": "standalone",
+  "background_color": "#111111",
+  "theme_color": "#E8102E",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/boss-icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

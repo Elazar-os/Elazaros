@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Menu Display - King of Delancey</title>
+  <link rel="stylesheet" href="/styles.css?v=v12">
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+
+  <div class="screen-wrap" id="screen-wrap">
+    <header class="screen-header">
+      <div class="header-left">
+        <span class="header-logo" id="header-logo">King of Delancey</span>
+        <span class="header-pipe" id="header-pipe">|</span>
+        <span class="header-subtitle" id="header-subtitle">Est. 2009</span>
+      </div>
+      <div class="header-right">
+        <span class="header-screen-id" id="header-screen-id"></span>
+        <div class="live-pill">
+          <span class="pulse-dot" id="pulse-dot"></span>
+          <span class="live-text">LIVE</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="screen-body" id="screen-body">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading menu...</p>
+      </div>
+    </main>
+
+    <footer class="screen-footer">
+      <span class="footer-clock" id="footer-clock"></span>
+      <div class="footer-ticker-wrap" id="footer-ticker-wrap">
+        <span class="footer-ticker" id="footer-ticker"></span>
+      </div>
+      <span class="footer-brand" id="footer-brand">KING OF DELANCEY</span>
+    </footer>
+  </div>
+
+  <div class="frozen-badge" id="frozen-badge">FROZEN</div>
+
+  <div class="fullscreen-overlay" id="fullscreen-overlay">
+    <div class="overlay-logo">KING OF DELANCEY</div>
+    <div class="overlay-text">Tap anywhere to continue</div>
+  </div>
+
+  <script src="/app.js?v=v12"></script>
+</body>
+</html>

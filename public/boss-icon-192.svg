@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <rect width="192" height="192" fill="#111111" rx="24"/>
+  <text x="96" y="110" text-anchor="middle" font-family="Arial Black, sans-serif" font-size="60" font-weight="900" fill="#E8102E">KOD</text>
+  <rect x="56" y="125" width="80" height="3" fill="#E8102E"/>
+  <text x="96" y="150" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#888888">BOSS</text>
+</svg>
