@@ -1,19 +1,36 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useLocation } from "wouter";
-import { useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Crown, ChefHat, Monitor } from "lucide-react";
 
 export default function Login() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, login, isLoggingIn } = useAuth();
   const [, setLocation] = useLocation();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isLoading && isAuthenticated) {
       setLocation("/admin");
     }
   }, [isAuthenticated, isLoading, setLocation]);
+
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setError("");
+
+    try {
+      await login({ username, password });
+      setLocation("/admin/dashboard");
+    } catch {
+      setError("Invalid username or password");
+    }
+  }
 
   if (isLoading) {
     return (
@@ -78,15 +95,47 @@ export default function Login() {
                 <p className="text-[#A09890]">Sign in to access your dashboard</p>
               </div>
 
-              <div className="space-y-4">
-                <Button 
-                  asChild
+              <form className="space-y-4" onSubmit={onSubmit}>
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="username" className="text-[#D0C8C0]">Username</Label>
+                  <Input
+                    id="username"
+                    value={username}
+                    onChange={(event) => setUsername(event.target.value)}
+                    autoComplete="username"
+                    className="h-11 bg-[#111111] border-[#2A2A2A] text-[#F5F0EB]"
+                    placeholder="Enter your username"
+                    data-testid="input-username"
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2 text-left">
+                  <Label htmlFor="password" className="text-[#D0C8C0]">Password</Label>
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(event) => setPassword(event.target.value)}
+                    autoComplete="current-password"
+                    className="h-11 bg-[#111111] border-[#2A2A2A] text-[#F5F0EB]"
+                    placeholder="Enter your password"
+                    data-testid="input-password"
+                    required
+                  />
+                </div>
+
+                {error ? (
+                  <p className="text-sm text-[#F76D6D]" data-testid="text-login-error">{error}</p>
+                ) : null}
+
+                <Button
+                  type="submit"
                   className="w-full h-12 bg-[#C8102E] hover:bg-[#A00D24] text-white font-medium text-base transition-all duration-200"
                   data-testid="button-login"
+                  disabled={isLoggingIn}
                 >
-                  <a href="/api/login">
-                    Sign In
-                  </a>
+                  {isLoggingIn ? "Signing In..." : "Sign In"}
                 </Button>
                 
                 <div className="relative">
@@ -99,13 +148,13 @@ export default function Login() {
                 </div>
                 
                 <p className="text-center text-[#A09890] text-sm">
-                  Sign in with your email, Google, GitHub, or Apple account
+                  Local sign-in for admin and boss accounts
                 </p>
-              </div>
+              </form>
 
               <div className="mt-8 pt-6 border-t border-[#2A2A2A]">
                 <p className="text-center text-[#A09890]/60 text-xs">
-                  Protected by Replit Authentication
+                  Protected by local session authentication
                 </p>
               </div>
             </CardContent>
