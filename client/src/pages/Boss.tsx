@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, X, Check, ExternalLink, RefreshCw, Loader2, AlertTriangle, Mic, MicOff } from 'lucide-react';
+import { Search, X, Check, ExternalLink, RefreshCw, Loader2, AlertTriangle, Mic, MicOff, Edit2, Trash2 } from 'lucide-react';
 
 type MenuItem = {
   id: number;
@@ -13,7 +13,7 @@ type MenuItem = {
   enabled: boolean;
 };
 
-type BossTab = 'home' | 'items' | 'featured' | 'kasa' | '86report';
+type BossTab = 'home' | 'items' | 'featured' | 'kasa' | '86report' | 'add' | 'screens' | 'settings';
 
 function InviteCodeScreen({ onAuth }: { onAuth: () => void }) {
   const [code, setCode] = useState('');
@@ -96,6 +96,8 @@ function BossApp() {
   const [featuredActive, setFeaturedActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [voiceResult, setVoiceResult] = useState<string>('');
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [newItem, setNewItem] = useState({ name: '', description: '', price: '', category: '', screenType: 'main', screenNumber: 1, priority: 0 });
   const recognitionRef = useRef<any>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
@@ -253,6 +255,49 @@ function BossApp() {
     }
   };
 
+  const deleteItem = async (id: number) => {
+    if (!confirm('Delete this item?')) return;
+    try {
+      await fetch(`/api/menu-items/${id}`, { method: 'DELETE' });
+      setItems(prev => prev.filter(i => i.id !== id));
+    } catch {}
+  };
+
+  const updateItem = async (item: MenuItem) => {
+    try {
+      const res = await fetch(`/api/menu-items/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setItems(prev => prev.map(i => i.id === updated.id ? updated : i));
+        setEditingItem(null);
+      }
+    } catch {}
+  };
+
+  const createItem = async () => {
+    if (!newItem.name || !newItem.price || !newItem.category) {
+      alert('Name, price, and category are required');
+      return;
+    }
+    try {
+      const res = await fetch('/api/menu-items', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...newItem, enabled: true }),
+      });
+      if (res.ok) {
+        const created = await res.json();
+        setItems(prev => [...prev, created]);
+        setNewItem({ name: '', description: '', price: '', category: '', screenType: 'main', screenNumber: 1, priority: 0 });
+        setTab('home');
+      }
+    } catch {}
+  };
+
   const screenLabel = (item: MenuItem) => {
     const type = item.screenType === 'sushi' ? 'Sushi' : 'Main';
     return `${type} ${item.screenNumber}`;
@@ -334,63 +379,124 @@ function BossApp() {
                     className={`rounded-lg border border-gray-800/50 p-3 ${!item.enabled ? 'bg-red-950/20 border-red-900/30' : 'bg-[#1a1a1a]'}`}
                     data-testid={`boss-item-${item.id}`}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <span className={`text-sm font-semibold ${!item.enabled ? 'text-red-400 line-through' : ''}`}>{item.name}</span>
-                        <div className="flex items-center gap-1.5 mt-1">
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">{item.category}</span>
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">{screenLabel(item)}</span>
+                    {editingItem?.id === item.id ? (
+                      <div className="space-y-2">
+                        <input
+                          type="text"
+                          value={editingItem.name}
+                          onChange={e => setEditingItem({...editingItem, name: e.target.value})}
+                          className="w-full bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white"
+                        />
+                        <textarea
+                          value={editingItem.description || ''}
+                          onChange={e => setEditingItem({...editingItem, description: e.target.value})}
+                          className="w-full bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white resize-none"
+                          rows={2}
+                        />
+                        <div className="flex gap-2">
+                          <input
+                            type="text"
+                            value={editingItem.price}
+                            onChange={e => setEditingItem({...editingItem, price: e.target.value})}
+                            className="flex-1 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white"
+                            placeholder="Price"
+                          />
+                          <input
+                            type="text"
+                            value={editingItem.category}
+                            onChange={e => setEditingItem({...editingItem, category: e.target.value})}
+                            className="flex-1 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white"
+                            placeholder="Category"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => updateItem(editingItem)}
+                            className="flex-1 bg-green-600 text-white px-3 py-2 rounded text-xs font-semibold"
+                          >
+                            Save
+                          </button>
+                          <button
+                            onClick={() => setEditingItem(null)}
+                            className="flex-1 bg-gray-700 text-white px-3 py-2 rounded text-xs font-semibold"
+                          >
+                            Cancel
+                          </button>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        {editingPriceId === item.id ? (
-                          <div className="flex items-center gap-1">
-                            <input
-                              type="text"
-                              value={editPriceValue}
-                              onChange={e => setEditPriceValue(e.target.value)}
-                              className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white text-right focus:outline-none"
-                              autoFocus
-                              data-testid={`input-price-${item.id}`}
-                            />
+                    ) : (
+                      <>
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="flex-1 min-w-0">
+                            <span className={`text-sm font-semibold ${!item.enabled ? 'text-red-400 line-through' : ''}`}>{item.name}</span>
+                            <div className="flex items-center gap-1.5 mt-1">
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">{item.category}</span>
+                              <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-800 text-gray-400">{screenLabel(item)}</span>
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            {editingPriceId === item.id ? (
+                              <div className="flex items-center gap-1">
+                                <input
+                                  type="text"
+                                  value={editPriceValue}
+                                  onChange={e => setEditPriceValue(e.target.value)}
+                                  className="w-20 bg-gray-900 border border-gray-600 rounded px-2 py-1 text-sm text-white text-right focus:outline-none"
+                                  autoFocus
+                                  data-testid={`input-price-${item.id}`}
+                                />
+                                <button
+                                  onClick={() => savePrice(item.id)}
+                                  className="p-1 text-green-500"
+                                  data-testid={`btn-save-price-${item.id}`}
+                                >
+                                  <Check className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => { setEditingPriceId(null); setEditPriceValue(''); }}
+                                  className="p-1 text-gray-500"
+                                  data-testid={`btn-cancel-price-${item.id}`}
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => { setEditingPriceId(item.id); setEditPriceValue(item.price); }}
+                                className="text-sm font-mono text-[#E8102E] bg-[#E8102E]/10 px-2 py-1 rounded"
+                                data-testid={`btn-edit-price-${item.id}`}
+                              >
+                                ${item.price}
+                              </button>
+                            )}
                             <button
-                              onClick={() => savePrice(item.id)}
-                              className="p-1 text-green-500"
-                              data-testid={`btn-save-price-${item.id}`}
+                              onClick={() => setEditingItem(item)}
+                              className="p-1.5 text-gray-400 hover:text-white"
                             >
-                              <Check className="w-4 h-4" />
+                              <Edit2 className="w-4 h-4" />
                             </button>
                             <button
-                              onClick={() => { setEditingPriceId(null); setEditPriceValue(''); }}
-                              className="p-1 text-gray-500"
-                              data-testid={`btn-cancel-price-${item.id}`}
+                              onClick={() => deleteItem(item.id)}
+                              className="p-1.5 text-gray-400 hover:text-red-500"
                             >
-                              <X className="w-4 h-4" />
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => toggle86(item)}
+                              disabled={togglingId === item.id}
+                              className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
+                                item.enabled
+                                  ? 'bg-gray-800 text-gray-300 active:bg-gray-700'
+                                  : 'bg-red-600 text-white active:bg-red-700'
+                              } ${togglingId === item.id ? 'opacity-50' : ''}`}
+                              data-testid={`btn-boss-toggle-${item.id}`}
+                            >
+                              {item.enabled ? '86' : 'Enable'}
                             </button>
                           </div>
-                        ) : (
-                          <button
-                            onClick={() => { setEditingPriceId(item.id); setEditPriceValue(item.price); }}
-                            className="text-sm font-mono text-[#E8102E] bg-[#E8102E]/10 px-2 py-1 rounded"
-                            data-testid={`btn-edit-price-${item.id}`}
-                          >
-                            ${item.price}
-                          </button>
-                        )}
-                        <button
-                          onClick={() => toggle86(item)}
-                          disabled={togglingId === item.id}
-                          className={`px-3 py-1.5 rounded text-xs font-semibold transition-colors ${
-                            item.enabled
-                              ? 'bg-gray-800 text-gray-300 active:bg-gray-700'
-                              : 'bg-red-600 text-white active:bg-red-700'
-                          } ${togglingId === item.id ? 'opacity-50' : ''}`}
-                          data-testid={`btn-boss-toggle-${item.id}`}
-                        >
-                          {item.enabled ? '86' : 'Enable'}
-                        </button>
-                      </div>
-                    </div>
+                        </div>
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
@@ -511,20 +617,125 @@ function BossApp() {
             )}
           </div>
         )}
+
+        {tab === 'add' && (
+          <div className="p-4 space-y-4" data-testid="boss-add">
+            <h2 className="text-lg font-bold">Add New Item</h2>
+            <input
+              type="text"
+              value={newItem.name}
+              onChange={e => setNewItem({...newItem, name: e.target.value})}
+              placeholder="Item name *"
+              className="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#E8102E]"
+            />
+            <textarea
+              value={newItem.description}
+              onChange={e => setNewItem({...newItem, description: e.target.value})}
+              placeholder="Description"
+              rows={3}
+              className="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#E8102E] resize-none"
+            />
+            <input
+              type="text"
+              value={newItem.price}
+              onChange={e => setNewItem({...newItem, price: e.target.value})}
+              placeholder="Price (e.g. 15.95) *"
+              className="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#E8102E]"
+            />
+            <input
+              type="text"
+              value={newItem.category}
+              onChange={e => setNewItem({...newItem, category: e.target.value})}
+              placeholder="Category *"
+              className="w-full bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#E8102E]"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <select
+                value={newItem.screenType}
+                onChange={e => setNewItem({...newItem, screenType: e.target.value})}
+                className="bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#E8102E]"
+              >
+                <option value="main">Main</option>
+                <option value="sushi">Sushi</option>
+              </select>
+              <input
+                type="number"
+                value={newItem.screenNumber}
+                onChange={e => setNewItem({...newItem, screenNumber: parseInt(e.target.value)})}
+                placeholder="Screen #"
+                min="1"
+                max="3"
+                className="bg-[#1a1a1a] border border-gray-700 rounded-lg px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-[#E8102E]"
+              />
+            </div>
+            <button
+              onClick={createItem}
+              className="w-full bg-[#E8102E] text-white py-3 rounded-lg font-semibold text-sm tracking-wider uppercase active:bg-[#c00d25]"
+            >
+              Create Item
+            </button>
+          </div>
+        )}
+
+        {tab === 'screens' && (
+          <div className="p-4 space-y-4" data-testid="boss-screens">
+            <h2 className="text-lg font-bold">Screen Management</h2>
+            <div className="space-y-2">
+              {['main', 'sushi'].map(type => (
+                [1, 2, 3].map(num => {
+                  const screenItems = items.filter(i => i.screenType === type && i.screenNumber === num);
+                  return (
+                    <div key={`${type}-${num}`} className="p-4 rounded-lg bg-[#1a1a1a] border border-gray-800">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-sm font-semibold">{type === 'sushi' ? 'Sushi' : 'Main'} Screen {num}</span>
+                        <span className="text-xs text-gray-500">{screenItems.length} items</span>
+                      </div>
+                      <div className="text-xs text-gray-600">
+                        {screenItems.slice(0, 3).map(i => i.name).join(', ')}
+                        {screenItems.length > 3 && ` +${screenItems.length - 3} more`}
+                      </div>
+                    </div>
+                  );
+                })
+              ))}
+            </div>
+          </div>
+        )}
+
+        {tab === 'settings' && (
+          <div className="p-4 space-y-4" data-testid="boss-settings">
+            <h2 className="text-lg font-bold">Settings</h2>
+            <div className="space-y-3">
+              <div className="p-4 rounded-lg bg-[#1a1a1a] border border-gray-800">
+                <h3 className="text-sm font-semibold mb-2">Database</h3>
+                <p className="text-xs text-gray-500 mb-3">Total items: {items.length}</p>
+                <p className="text-xs text-gray-500 mb-3">Active: {items.filter(i => i.enabled).length}</p>
+                <p className="text-xs text-gray-500">86'd: {items.filter(i => !i.enabled).length}</p>
+              </div>
+              <div className="p-4 rounded-lg bg-[#1a1a1a] border border-gray-800">
+                <h3 className="text-sm font-semibold mb-2">Categories</h3>
+                <div className="flex flex-wrap gap-1">
+                  {Array.from(new Set(items.map(i => i.category))).map(cat => (
+                    <span key={cat} className="text-[10px] px-2 py-1 rounded bg-gray-800 text-gray-400">{cat}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 bg-[#111] border-t border-gray-800 flex z-30" data-testid="boss-nav">
+      <nav className="fixed bottom-0 left-0 right-0 bg-[#111] border-t border-gray-800 grid grid-cols-4 z-30" data-testid="boss-nav">
         {[
           { id: 'home' as BossTab, label: 'Home', icon: '🏠' },
-          { id: 'items' as BossTab, label: 'Items', icon: '📋' },
-          { id: 'featured' as BossTab, label: 'Featured', icon: '⭐' },
-          { id: 'kasa' as BossTab, label: 'Kasa', icon: '🔌' },
+          { id: 'add' as BossTab, label: 'Add', icon: '➕' },
+          { id: 'screens' as BossTab, label: 'Screens', icon: '📺' },
           { id: '86report' as BossTab, label: '86', icon: '🚫' },
         ].map(t => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-3 flex flex-col items-center gap-0.5 text-[10px] uppercase tracking-wider transition-colors ${
+            className={`py-3 flex flex-col items-center gap-0.5 text-[10px] uppercase tracking-wider transition-colors ${
               tab === t.id ? 'text-[#E8102E]' : 'text-gray-600'
             }`}
             data-testid={`nav-${t.id}`}
