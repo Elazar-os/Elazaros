@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Search, X, Check, ExternalLink, RefreshCw, Loader2, AlertTriangle } from 'lucide-react';
+import { Search, X, Check, ExternalLink, RefreshCw, Loader2, AlertTriangle, Mic, MicOff } from 'lucide-react';
 
 type MenuItem = {
   id: number;
@@ -94,6 +94,9 @@ function BossApp() {
   const [featuredName, setFeaturedName] = useState('');
   const [featuredDesc, setFeaturedDesc] = useState('');
   const [featuredActive, setFeaturedActive] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceResult, setVoiceResult] = useState<string>('');
+  const recognitionRef = useRef<any>(null);
   const wsRef = useRef<WebSocket | null>(null);
 
   const fetchItems = useCallback(() => {
@@ -186,6 +189,70 @@ function BossApp() {
     } catch {}
   };
 
+  const startVoiceCommand = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      setVoiceResult('Voice recognition not supported');
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      setVoiceResult('Listening...');
+    };
+
+    recognition.onresult = async (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setVoiceResult(`Processing: "${transcript}"`);
+
+      try {
+        const res = await fetch('/api/voice-command', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ command: transcript }),
+        });
+        const data = await res.json();
+        
+        if (data.success) {
+          setVoiceResult(`✓ ${data.message}`);
+          fetchItems();
+        } else {
+          setVoiceResult(`✗ ${data.message || 'Command not recognized'}`);
+        }
+      } catch {
+        setVoiceResult('✗ Connection error');
+      }
+
+      setTimeout(() => setVoiceResult(''), 5000);
+    };
+
+    recognition.onerror = () => {
+      setVoiceResult('✗ Voice recognition error');
+      setIsListening(false);
+      setTimeout(() => setVoiceResult(''), 3000);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
+  const stopVoiceCommand = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+    }
+  };
+
   const screenLabel = (item: MenuItem) => {
     const type = item.screenType === 'sushi' ? 'Sushi' : 'Main';
     return `${type} ${item.screenNumber}`;
@@ -208,7 +275,17 @@ function BossApp() {
           <h1 className="text-lg font-bold tracking-wider" style={{ fontFamily: "'Bebas Neue', sans-serif", letterSpacing: '3px' }} data-testid="boss-header-logo">KOD</h1>
         </div>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-gray-500 uppercase tracking-wider">Manager</span>
+          <button
+            onClick={isListening ? stopVoiceCommand : startVoiceCommand}
+            className={`p-2 rounded-lg transition-colors ${
+              isListening 
+                ? 'bg-red-600 text-white animate-pulse' 
+                : 'bg-gray-800 text-gray-300 active:bg-gray-700'
+            }`}
+            data-testid="btn-voice-command"
+          >
+            {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          </button>
           <button
             onClick={pushToScreens}
             disabled={pushing}
@@ -220,6 +297,12 @@ function BossApp() {
           </button>
         </div>
       </header>
+
+      {voiceResult && (
+        <div className="bg-[#1a1a1a] border-b border-gray-800 px-4 py-2 text-sm text-center" data-testid="voice-result">
+          {voiceResult}
+        </div>
+      )}
 
       <main className="flex-1 overflow-y-auto pb-20">
         {tab === 'home' && (
