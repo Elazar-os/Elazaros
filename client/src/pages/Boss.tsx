@@ -699,6 +699,22 @@ function BossApp() {
                 })
               ))}
             </div>
+
+            <div className="bg-[#1a1a1a] border border-gray-800 rounded-xl p-6 space-y-4 mt-6">
+              <h2 className="text-lg font-bold">Screen Schedule (Kasa)</h2>
+              <p className="text-sm text-gray-400">Use the Kasa app to adjust when screens turn on and off.</p>
+              <a
+                href="https://www.kasasmart.com/us/products/smart-plugs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full bg-[#E8102E] text-white py-3.5 rounded-lg font-semibold text-sm tracking-wider uppercase text-center active:bg-[#c00d25] flex items-center justify-center gap-2"
+                data-testid="link-kasa"
+              >
+                <ExternalLink className="w-4 h-4" />
+                Open Kasa App
+              </a>
+              <p className="text-xs text-gray-600 text-center">Contact your system administrator to adjust Kasa account access.</p>
+            </div>
           </div>
         )}
 
