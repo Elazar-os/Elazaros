@@ -603,29 +603,46 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:180px;height:180px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:200px;height:180px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
 
   var crown = document.createElement('div');
-  crown.innerHTML = '<svg width="160" height="140" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+  crown.innerHTML = '<svg width="180" height="150" viewBox="0 0 180 150" fill="none" xmlns="http://www.w3.org/2000/svg">' +
     '<defs>' +
     '<linearGradient id="crownGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
     '<stop offset="0%" style="stop-color:#E8102E;stop-opacity:1" />' +
     '<stop offset="50%" style="stop-color:#C8102E;stop-opacity:1" />' +
     '<stop offset="100%" style="stop-color:#A00D24;stop-opacity:1" />' +
     '</linearGradient>' +
+    '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+    '<stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />' +
+    '<stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />' +
+    '</linearGradient>' +
     '<filter id="shadow">' +
-    '<feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.3"/>' +
+    '<feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.4"/>' +
     '</filter>' +
     '</defs>' +
     '<g filter="url(#shadow)">' +
-    '<path d="M80 20 L95 55 L130 40 L110 75 L145 85 L115 105 L120 140 L80 120 L40 140 L45 105 L15 85 L50 75 L30 40 L65 55 Z" ' +
-    'fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="3"/>' +
-    '<circle cx="80" cy="25" r="6" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
-    '<circle cx="130" cy="45" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
-    '<circle cx="30" cy="45" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
-    '<circle cx="145" cy="90" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
-    '<circle cx="15" cy="90" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
-    '<ellipse cx="80" cy="80" rx="25" ry="15" fill="#8B0A1E" opacity="0.3"/>' +
+    '<!-- Crown base -->' +
+    '<path d="M30 110 L30 130 L150 130 L150 110 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<!-- Crown body with elegant curves -->' +
+    '<path d="M30 110 Q40 90 50 70 Q60 50 70 40 Q80 30 90 25 Q100 30 110 40 Q120 50 130 70 Q140 90 150 110 Z" ' +
+    'fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2.5"/>' +
+    '<!-- Center peak -->' +
+    '<path d="M85 25 L90 10 L95 25 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<!-- Left peaks -->' +
+    '<path d="M60 45 L65 30 L70 45 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<path d="M35 85 L40 70 L45 85 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<!-- Right peaks -->' +
+    '<path d="M110 45 L115 30 L120 45 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<path d="M135 85 L140 70 L145 85 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
+    '<!-- Jewels -->' +
+    '<circle cx="90" cy="15" r="5" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
+    '<circle cx="65" cy="35" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
+    '<circle cx="115" cy="35" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
+    '<circle cx="40" cy="75" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
+    '<circle cx="140" cy="75" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
+    '<!-- Decorative band -->' +
+    '<rect x="35" y="115" width="110" height="8" fill="#8B0A1E" opacity="0.3" rx="2"/>' +
     '</g>' +
     '</svg>';
   
