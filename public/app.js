@@ -34,6 +34,8 @@ var pageIntervals = [];
 var pollLastVersion = null;
 var pollLastFrozen = null;
 var pollLastFeatured = null;
+var pollLastCampfire = null;
+var campfireEnabled = true;
 
 function updateClock() {
   var now = new Date();
@@ -77,6 +79,8 @@ async function pollScreenState() {
       pollLastVersion = state.version;
       pollLastFrozen = state.frozen;
       pollLastFeatured = state.featured ? JSON.stringify(state.featured) : null;
+      pollLastCampfire = state.campfireEnabled;
+      campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
       if (state.frozen) {
         frozen = true;
         document.getElementById('frozen-badge').classList.add('visible');
@@ -91,10 +95,12 @@ async function pollScreenState() {
     var frozenChanged = state.frozen !== pollLastFrozen;
     var featuredKey = state.featured ? JSON.stringify(state.featured) : null;
     var featuredChanged = featuredKey !== pollLastFeatured;
+    var campfireChanged = state.campfireEnabled !== pollLastCampfire;
 
     pollLastVersion = state.version;
     pollLastFrozen = state.frozen;
     pollLastFeatured = featuredKey;
+    pollLastCampfire = state.campfireEnabled;
 
     if (frozenChanged) {
       frozen = state.frozen;
@@ -106,6 +112,11 @@ async function pollScreenState() {
     if (featuredChanged) {
       if (state.featured) { showFeaturedItem(state.featured); }
       else { clearFeaturedItem(); }
+    }
+
+    if (campfireChanged) {
+      campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
+      toggleCampfire(campfireEnabled);
     }
 
     if (versionChanged) {
@@ -580,7 +591,32 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:180px;height:140px;pointer-events:none;z-index:5;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:180px;height:140px;pointer-events:none;z-index:5;transition:opacity 0.5s ease;';
+  layer.style.opacity = campfireEnabled ? '1' : '0';
+
+  if (!campfireEnabled) {
+    var logo = document.createElement('div');
+    logo.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
+    
+    var logoText = document.createElement('div');
+    logoText.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--cat);letter-spacing:4px;line-height:1;";
+    logoText.textContent = 'KING OF DELANCEY';
+    logo.appendChild(logoText);
+    
+    var bar = document.createElement('div');
+    bar.style.cssText = 'width:30px;height:2px;background:var(--accent);margin:4px 0;';
+    logo.appendChild(bar);
+    
+    var est = document.createElement('div');
+    est.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--accent);letter-spacing:3px;";
+    est.textContent = 'EST. 2009';
+    logo.appendChild(est);
+    
+    layer.appendChild(logo);
+    wrapsPanel.style.position = 'relative';
+    wrapsPanel.appendChild(layer);
+    return;
+  }
 
   var campfire = document.createElement('div');
   campfire.style.cssText = 'position:relative;width:100%;height:100%;';
@@ -636,6 +672,19 @@ function addFlameAndSmoke() {
   layer.appendChild(campfire);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
+}
+
+function toggleCampfire(enabled) {
+  campfireEnabled = enabled;
+  var layer = document.getElementById('flame-smoke-layer');
+  if (layer) {
+    layer.style.opacity = enabled ? '1' : '0';
+    setTimeout(function() {
+      addFlameAndSmoke();
+    }, 500);
+  } else {
+    addFlameAndSmoke();
+  }
 }
 
 function enterFullscreen() {

@@ -5,6 +5,7 @@ export type VoiceIntent =
   | { type: 'disable'; itemName: string }
   | { type: 'enable'; itemName: string }
   | { type: 'price'; itemName: string; price: string }
+  | { type: 'campfire'; action: 'on' | 'off' }
   | { type: 'unknown'; raw: string };
 
 export function parseVoiceCommand(raw: string): VoiceIntent {
@@ -12,6 +13,10 @@ export function parseVoiceCommand(raw: string): VoiceIntent {
   
   if (detectThemeIntent(command)) {
     return { type: 'theme', theme: extractTheme(command) };
+  }
+  
+  if (detectCampfireIntent(command)) {
+    return { type: 'campfire', action: extractCampfireAction(command) };
   }
   
   if (detect86Intent(command)) {
@@ -43,6 +48,15 @@ function extractTheme(cmd: string): string {
   if (/classic|delancey/i.test(cmd)) return 'delanceyClassic';
   if (/high\s*contrast|fast|yellow/i.test(cmd)) return 'highContrastFast';
   return 'delanceyClassic';
+}
+
+function detectCampfireIntent(cmd: string): boolean {
+  return /\b(campfire|fire)\b/i.test(cmd) && /\b(on|off|turn|start|stop|light|extinguish)\b/i.test(cmd);
+}
+
+function extractCampfireAction(cmd: string): 'on' | 'off' {
+  if (/\b(off|stop|extinguish|turn off)\b/i.test(cmd)) return 'off';
+  return 'on';
 }
 
 function detect86Intent(cmd: string): boolean {

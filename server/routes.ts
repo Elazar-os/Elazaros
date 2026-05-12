@@ -17,6 +17,7 @@ const managerTokens = new Map<string, { name: string; expires: number }>();
 let screenVersion = Date.now();
 let screenFrozen = false;
 let screenFeatured: { name: string; description: string; price: string } | null = null;
+let campfireEnabled = true;
 
 function bumpVersion() {
   screenVersion = Date.now();
@@ -761,7 +762,7 @@ export async function registerRoutes(
   }
 
   app.get('/api/screen-state', (_req, res) => {
-    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured });
+    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled });
   });
 
   app.post('/api/refresh-screens', async (_req, res) => {
@@ -872,6 +873,18 @@ export async function registerRoutes(
           newPrice: priceValue,
           confidence: match.confidence,
           message: `${match.item.name} price updated to $${priceValue}` 
+        });
+      }
+      
+      if (parsed.type === 'campfire') {
+        campfireEnabled = parsed.action === 'on';
+        bumpVersion();
+        broadcast({ type: 'CAMPFIRE_UPDATE', enabled: campfireEnabled });
+        return res.json({ 
+          success: true, 
+          action: 'campfire_toggled', 
+          enabled: campfireEnabled,
+          message: `Campfire turned ${campfireEnabled ? 'on' : 'off'}` 
         });
       }
       
