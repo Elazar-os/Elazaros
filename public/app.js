@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v8_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v9_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
