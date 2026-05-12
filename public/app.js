@@ -603,17 +603,30 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:150px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:180px;height:180px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
 
   var crown = document.createElement('div');
-  crown.innerHTML = '<svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-    '<path d="M60 10 L70 35 L95 25 L80 50 L105 55 L85 70 L90 95 L60 80 L30 95 L35 70 L15 55 L40 50 L25 25 L50 35 Z" ' +
-    'fill="#C8102E" stroke="#A00D24" stroke-width="2"/>' +
-    '<circle cx="60" cy="15" r="4" fill="#FFD700"/>' +
-    '<circle cx="95" cy="30" r="3" fill="#FFD700"/>' +
-    '<circle cx="25" cy="30" r="3" fill="#FFD700"/>' +
-    '<circle cx="105" cy="60" r="3" fill="#FFD700"/>' +
-    '<circle cx="15" cy="60" r="3" fill="#FFD700"/>' +
+  crown.innerHTML = '<svg width="160" height="140" viewBox="0 0 160 140" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' +
+    '<linearGradient id="crownGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
+    '<stop offset="0%" style="stop-color:#E8102E;stop-opacity:1" />' +
+    '<stop offset="50%" style="stop-color:#C8102E;stop-opacity:1" />' +
+    '<stop offset="100%" style="stop-color:#A00D24;stop-opacity:1" />' +
+    '</linearGradient>' +
+    '<filter id="shadow">' +
+    '<feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.3"/>' +
+    '</filter>' +
+    '</defs>' +
+    '<g filter="url(#shadow)">' +
+    '<path d="M80 20 L95 55 L130 40 L110 75 L145 85 L115 105 L120 140 L80 120 L40 140 L45 105 L15 85 L50 75 L30 40 L65 55 Z" ' +
+    'fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="3"/>' +
+    '<circle cx="80" cy="25" r="6" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
+    '<circle cx="130" cy="45" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
+    '<circle cx="30" cy="45" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
+    '<circle cx="145" cy="90" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
+    '<circle cx="15" cy="90" r="5" fill="#FFD700" stroke="#FFA500" stroke-width="1.5"/>' +
+    '<ellipse cx="80" cy="80" rx="25" ry="15" fill="#8B0A1E" opacity="0.3"/>' +
+    '</g>' +
     '</svg>';
   
   layer.appendChild(crown);
