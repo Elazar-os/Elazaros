@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v13_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v14_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
@@ -129,7 +129,7 @@ async function pollScreenState() {
 
 function startPolling() {
   pollScreenState();
-  setInterval(pollScreenState, 30000);
+  setInterval(pollScreenState, 2000);
 }
 
 function fetchWithTimeout(url, ms) {
