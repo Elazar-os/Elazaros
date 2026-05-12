@@ -603,37 +603,13 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:220px;height:200px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:200px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
 
-  var logo = document.createElement('div');
-  logo.innerHTML = '<svg width="200" height="180" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-    '<defs><filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/></filter></defs>' +
-    '<g filter="url(#shadow)" fill="#C8102E">' +
-    '<!-- Crown -->' +
-    '<path d="M100 20 L105 35 Q107 40 100 45 Q93 40 95 35 Z"/>' +
-    '<path d="M100 45 Q85 50 75 35 L70 50 Q68 55 75 60 L85 55 Q95 50 100 52 Q105 50 115 55 L125 60 Q132 55 130 50 L125 35 Q115 50 100 45 Z"/>' +
-    '<path d="M70 50 L60 40 L50 55 L60 60 Z"/>' +
-    '<path d="M130 50 L140 40 L150 55 L140 60 Z"/>' +
-    '<path d="M50 55 L35 50 L30 65 L45 68 Z"/>' +
-    '<path d="M150 55 L165 50 L170 65 L155 68 Z"/>' +
-    '<path d="M30 65 L35 75 L165 75 L170 65 Q168 70 165 72 L35 72 Q32 70 30 65 Z"/>' +
-    '<ellipse cx="100" cy="50" rx="3" ry="4" fill="white"/>' +
-    '<ellipse cx="80" cy="58" rx="3" ry="4" fill="white"/>' +
-    '<ellipse cx="120" cy="58" rx="3" ry="4" fill="white"/>' +
-    '<path d="M40 73 L45 75 L155 75 L160 73 Q158 74 155 74 L45 74 Q42 74 40 73 Z" fill="white" opacity="0.3"/>' +
-    '<!-- KOD Text -->' +
-    '<text x="100" y="110" font-family="serif" font-size="42" font-weight="bold" text-anchor="middle" fill="#C8102E">KOD</text>' +
-    '<line x1="60" y1="118" x2="90" y2="118" stroke="#C8102E" stroke-width="2"/>' +
-    '<polygon points="100,120 95,125 105,125" fill="#C8102E"/>' +
-    '<line x1="110" y1="118" x2="140" y2="118" stroke="#C8102E" stroke-width="2"/>' +
-    '<!-- KING OF DELANCEY Text -->' +
-    '<text x="100" y="145" font-family="serif" font-size="11" font-weight="600" letter-spacing="2" text-anchor="middle" fill="#C8102E">KING OF DELANCEY</text>' +
-    '<line x1="50" y1="152" x2="150" y2="152" stroke="#C8102E" stroke-width="1"/>' +
-    '<polygon points="100,155 97,160 103,160" fill="#C8102E"/>' +
-    '</g>' +
-    '</svg>';
+  var img = document.createElement('img');
+  img.src = '/Copilot_20260512_174931.png';
+  img.style.cssText = 'width:100%;height:auto;max-width:180px;';
   
-  layer.appendChild(logo);
+  layer.appendChild(img);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
 }
