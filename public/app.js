@@ -12,6 +12,18 @@ var SN = params.screenNumber;
 var CACHE_KEY = 'kod_menu_v25_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
+// Auto-clear old cache versions
+(function() {
+  try {
+    var keys = Object.keys(localStorage);
+    keys.forEach(function(key) {
+      if (key.startsWith('kod_menu_v') && key !== CACHE_KEY) {
+        localStorage.removeItem(key);
+      }
+    });
+  } catch(e) {}
+})();
+
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
 
 if (ST === 'sushi') {
