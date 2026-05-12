@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v20_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v25_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
@@ -591,99 +591,26 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:240px;height:200px;pointer-events:none;z-index:5;transition:opacity 0.5s ease;opacity:1;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:150px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
 
-  if (!campfireEnabled) {
-    var logo = document.createElement('div');
-    logo.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;';
-    
-    var logoText = document.createElement('div');
-    logoText.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--cat);letter-spacing:4px;line-height:1;";
-    logoText.textContent = 'KING OF DELANCEY';
-    logo.appendChild(logoText);
-    
-    var bar = document.createElement('div');
-    bar.style.cssText = 'width:30px;height:2px;background:var(--accent);margin:4px 0;';
-    logo.appendChild(bar);
-    
-    var est = document.createElement('div');
-    est.style.cssText = "font-family:'Bebas Neue',sans-serif;font-size:10px;color:var(--accent);letter-spacing:3px;";
-    est.textContent = 'EST. 2009';
-    logo.appendChild(est);
-    
-    layer.appendChild(logo);
-    wrapsPanel.style.position = 'relative';
-    wrapsPanel.appendChild(layer);
-    return;
-  }
-
-  var campfire = document.createElement('div');
-  campfire.style.cssText = 'position:relative;width:100%;height:100%;';
-
-  var logs = document.createElement('div');
-  logs.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:160px;height:40px;';
-  logs.innerHTML = '<div style="position:absolute;bottom:0;left:10%;width:130px;height:16px;background:#4A3728;border-radius:8px;transform:rotate(-8deg)"></div>' +
-                   '<div style="position:absolute;bottom:0;right:10%;width:120px;height:16px;background:#5A4738;border-radius:8px;transform:rotate(8deg)"></div>' +
-                   '<div style="position:absolute;bottom:10px;left:20%;width:110px;height:14px;background:#3A2718;border-radius:7px;transform:rotate(-5deg)"></div>';
-  campfire.appendChild(logs);
-
-  var flameContainer = document.createElement('div');
-  flameContainer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:140px;height:120px;filter:blur(1px);';
-
-  var flame1 = document.createElement('div');
-  flame1.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:70px;height:100px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#E8102E 30%,#FF4444 60%,#FFA500 85%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.15s ease-in-out infinite alternate;opacity:0.8;';
-  flameContainer.appendChild(flame1);
-
-  var flame2 = document.createElement('div');
-  flame2.style.cssText = 'position:absolute;bottom:0;left:30%;transform:translateX(-50%);width:55px;height:80px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.18s ease-in-out infinite alternate-reverse;opacity:0.7;';
-  flameContainer.appendChild(flame2);
-
-  var flame3 = document.createElement('div');
-  flame3.style.cssText = 'position:absolute;bottom:0;left:70%;transform:translateX(-50%);width:50px;height:75px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.2s ease-in-out infinite alternate;opacity:0.7;';
-  flameContainer.appendChild(flame3);
-
-  var flameCore = document.createElement('div');
-  flameCore.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:45px;height:65px;' +
-    'background:linear-gradient(to top,#FFA500 0%,#FFD700 50%,#FFEB99 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.12s ease-in-out infinite alternate;opacity:0.9;';
-  flameContainer.appendChild(flameCore);
-
-  campfire.appendChild(flameContainer);
-
-  var now = Date.now();
-  for (var i = 0; i < 6; i++) {
-    var smoke = document.createElement('div');
-    smoke.style.cssText = 'position:absolute;bottom:120px;width:70px;height:70px;' +
-      'background:radial-gradient(circle,rgba(200,16,46,0.25) 0%,rgba(200,16,46,0.15) 40%,transparent 70%);' +
-      'border-radius:50%;filter:blur(8px);opacity:0;animation:smoke-rise 8s ease-out infinite;';
-    var delay = (i * 1333) - (now % 8000);
-    smoke.style.animationDelay = (delay / 1000) + 's';
-    smoke.style.left = 'calc(50% - 35px + ' + (i * 12 - 30) + 'px)';
-    campfire.appendChild(smoke);
-  }
-
-  layer.appendChild(campfire);
+  var crown = document.createElement('div');
+  crown.innerHTML = '<svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<path d="M60 10 L70 35 L95 25 L80 50 L105 55 L85 70 L90 95 L60 80 L30 95 L35 70 L15 55 L40 50 L25 25 L50 35 Z" ' +
+    'fill="#C8102E" stroke="#A00D24" stroke-width="2"/>' +
+    '<circle cx="60" cy="15" r="4" fill="#FFD700"/>' +
+    '<circle cx="95" cy="30" r="3" fill="#FFD700"/>' +
+    '<circle cx="25" cy="30" r="3" fill="#FFD700"/>' +
+    '<circle cx="105" cy="60" r="3" fill="#FFD700"/>' +
+    '<circle cx="15" cy="60" r="3" fill="#FFD700"/>' +
+    '</svg>';
+  
+  layer.appendChild(crown);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
 }
 
 function toggleCampfire(enabled) {
-  campfireEnabled = enabled;
-  var layer = document.getElementById('flame-smoke-layer');
-  if (layer) {
-    layer.style.opacity = '0';
-    setTimeout(function() {
-      addFlameAndSmoke();
-    }, 500);
-  } else {
-    addFlameAndSmoke();
-  }
+  // Removed - crown is always visible
 }
 
 function enterFullscreen() {
