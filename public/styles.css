@@ -515,3 +515,108 @@ body{
 
 .kiosk-mode{cursor:none!important}
 .kiosk-mode *{cursor:none!important}
+
+/* Flame & Smoke Effect */
+.flame-smoke-layer{
+  position:fixed;
+  bottom:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:10;
+  overflow:hidden;
+}
+
+.flame-container{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:200px;
+  height:120px;
+  filter:blur(1px);
+}
+
+.flame{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:80px;
+  height:100px;
+  background:linear-gradient(to top,#C8102E 0%,#FF4444 40%,#FFA500 70%,transparent 100%);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:flicker 0.15s ease-in-out infinite alternate;
+  opacity:0.6;
+}
+
+.flame::before{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:60px;
+  height:80px;
+  background:linear-gradient(to top,#FF4444 0%,#FFA500 50%,transparent 100%);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:flicker 0.2s ease-in-out infinite alternate-reverse;
+}
+
+.flame::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:40px;
+  height:60px;
+  background:linear-gradient(to top,#FFA500 0%,#FFD700 50%,transparent 100%);
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  animation:flicker 0.18s ease-in-out infinite alternate;
+}
+
+@keyframes flicker{
+  0%{transform:translateX(-50%) scaleY(1) scaleX(1)}
+  100%{transform:translateX(-50%) scaleY(0.95) scaleX(1.05)}
+}
+
+.smoke-particle{
+  position:absolute;
+  bottom:100px;
+  width:60px;
+  height:60px;
+  background:radial-gradient(circle,rgba(200,16,46,0.15) 0%,rgba(200,16,46,0.08) 40%,transparent 70%);
+  border-radius:50%;
+  filter:blur(8px);
+  opacity:0;
+}
+
+.smoke-particle:nth-child(1){animation:smoke-rise 8s ease-out infinite;animation-delay:0s;left:calc(50% - 30px)}
+.smoke-particle:nth-child(2){animation:smoke-rise 8s ease-out infinite;animation-delay:2s;left:calc(50% - 20px)}
+.smoke-particle:nth-child(3){animation:smoke-rise 8s ease-out infinite;animation-delay:4s;left:calc(50% - 10px)}
+.smoke-particle:nth-child(4){animation:smoke-rise 8s ease-out infinite;animation-delay:6s;left:calc(50% + 0px)}
+
+@keyframes smoke-rise{
+  0%{transform:translateY(0) translateX(0) scale(0.8);opacity:0}
+  10%{opacity:0.4}
+  50%{opacity:0.3}
+  100%{transform:translateY(-100vh) translateX(80px) scale(2.5);opacity:0}
+}
+
+.theme-sushi .flame{
+  background:linear-gradient(to top,#2D9E6B 0%,#3FBF85 40%,#5FD9A5 70%,transparent 100%);
+}
+
+.theme-sushi .flame::before{
+  background:linear-gradient(to top,#3FBF85 0%,#5FD9A5 50%,transparent 100%);
+}
+
+.theme-sushi .flame::after{
+  background:linear-gradient(to top,#5FD9A5 0%,#7FE9B5 50%,transparent 100%);
+}
+
+.theme-sushi .smoke-particle{
+  background:radial-gradient(circle,rgba(45,158,107,0.15) 0%,rgba(45,158,107,0.08) 40%,transparent 70%);
+}

@@ -398,6 +398,8 @@ function renderScreen(items) {
   else if (ST === 'sushi' && SN === 1) renderSushi1(body, groups);
   else if (ST === 'sushi' && SN === 2) renderSushi2(body, groups);
   else renderGeneric(body, groups, data.order);
+
+  addFlameAndSmoke();
 }
 
 function renderMain1(body, groups) {
@@ -565,6 +567,34 @@ function clearFeaturedItem() {
   est.className = 'kod-brand-est';
   est.textContent = 'EST. 2009';
   strip.appendChild(est);
+}
+
+function addFlameAndSmoke() {
+  var existing = document.getElementById('flame-smoke-layer');
+  if (existing) existing.remove();
+
+  var layer = document.createElement('div');
+  layer.id = 'flame-smoke-layer';
+  layer.className = 'flame-smoke-layer';
+
+  var flameContainer = document.createElement('div');
+  flameContainer.className = 'flame-container';
+
+  var flame = document.createElement('div');
+  flame.className = 'flame';
+  flameContainer.appendChild(flame);
+
+  var now = Date.now();
+  for (var i = 0; i < 4; i++) {
+    var smoke = document.createElement('div');
+    smoke.className = 'smoke-particle';
+    var delay = (i * 2000) - (now % 8000);
+    smoke.style.animationDelay = (delay / 1000) + 's';
+    flameContainer.appendChild(smoke);
+  }
+
+  layer.appendChild(flameContainer);
+  document.body.appendChild(layer);
 }
 
 function enterFullscreen() {
