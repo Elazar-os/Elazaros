@@ -570,6 +570,8 @@ function clearFeaturedItem() {
 }
 
 function addFlameAndSmoke() {
+  if (ST === 'sushi') return;
+  
   var existing = document.getElementById('flame-smoke-layer');
   if (existing) existing.remove();
 
