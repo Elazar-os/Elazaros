@@ -603,60 +603,37 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:240px;height:200px;pointer-events:none;z-index:5;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:220px;height:200px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
 
-  var campfire = document.createElement('div');
-  campfire.style.cssText = 'position:relative;width:100%;height:100%;';
-
-  var logs = document.createElement('div');
-  logs.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:160px;height:40px;';
-  logs.innerHTML = '<div style="position:absolute;bottom:0;left:10%;width:130px;height:16px;background:#4A3728;border-radius:8px;transform:rotate(-8deg)"></div>' +
-                   '<div style="position:absolute;bottom:0;right:10%;width:120px;height:16px;background:#5A4738;border-radius:8px;transform:rotate(8deg)"></div>' +
-                   '<div style="position:absolute;bottom:10px;left:20%;width:110px;height:14px;background:#3A2718;border-radius:7px;transform:rotate(-5deg)"></div>';
-  campfire.appendChild(logs);
-
-  var flameContainer = document.createElement('div');
-  flameContainer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:140px;height:120px;filter:blur(1px);';
-
-  var flame1 = document.createElement('div');
-  flame1.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:70px;height:100px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#E8102E 30%,#FF4444 60%,#FFA500 85%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.15s ease-in-out infinite alternate;opacity:0.8;';
-  flameContainer.appendChild(flame1);
-
-  var flame2 = document.createElement('div');
-  flame2.style.cssText = 'position:absolute;bottom:0;left:30%;transform:translateX(-50%);width:55px;height:80px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.18s ease-in-out infinite alternate-reverse;opacity:0.7;';
-  flameContainer.appendChild(flame2);
-
-  var flame3 = document.createElement('div');
-  flame3.style.cssText = 'position:absolute;bottom:0;left:70%;transform:translateX(-50%);width:50px;height:75px;' +
-    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.2s ease-in-out infinite alternate;opacity:0.7;';
-  flameContainer.appendChild(flame3);
-
-  var flameCore = document.createElement('div');
-  flameCore.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:45px;height:65px;' +
-    'background:linear-gradient(to top,#FFA500 0%,#FFD700 50%,#FFEB99 80%,transparent 100%);' +
-    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.12s ease-in-out infinite alternate;opacity:0.9;';
-  flameContainer.appendChild(flameCore);
-
-  campfire.appendChild(flameContainer);
-
-  var now = Date.now();
-  for (var i = 0; i < 6; i++) {
-    var smoke = document.createElement('div');
-    smoke.style.cssText = 'position:absolute;bottom:120px;width:70px;height:70px;' +
-      'background:radial-gradient(circle,rgba(200,16,46,0.25) 0%,rgba(200,16,46,0.15) 40%,transparent 70%);' +
-      'border-radius:50%;filter:blur(8px);opacity:0;animation:smoke-rise 8s ease-out infinite;';
-    var delay = (i * 1333) - (now % 8000);
-    smoke.style.animationDelay = (delay / 1000) + 's';
-    smoke.style.left = 'calc(50% - 35px + ' + (i * 12 - 30) + 'px)';
-    campfire.appendChild(smoke);
-  }
-
-  layer.appendChild(campfire);
+  var logo = document.createElement('div');
+  logo.innerHTML = '<svg width="200" height="180" viewBox="0 0 200 180" fill="none" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs><filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.3"/></filter></defs>' +
+    '<g filter="url(#shadow)" fill="#C8102E">' +
+    '<!-- Crown -->' +
+    '<path d="M100 20 L105 35 Q107 40 100 45 Q93 40 95 35 Z"/>' +
+    '<path d="M100 45 Q85 50 75 35 L70 50 Q68 55 75 60 L85 55 Q95 50 100 52 Q105 50 115 55 L125 60 Q132 55 130 50 L125 35 Q115 50 100 45 Z"/>' +
+    '<path d="M70 50 L60 40 L50 55 L60 60 Z"/>' +
+    '<path d="M130 50 L140 40 L150 55 L140 60 Z"/>' +
+    '<path d="M50 55 L35 50 L30 65 L45 68 Z"/>' +
+    '<path d="M150 55 L165 50 L170 65 L155 68 Z"/>' +
+    '<path d="M30 65 L35 75 L165 75 L170 65 Q168 70 165 72 L35 72 Q32 70 30 65 Z"/>' +
+    '<ellipse cx="100" cy="50" rx="3" ry="4" fill="white"/>' +
+    '<ellipse cx="80" cy="58" rx="3" ry="4" fill="white"/>' +
+    '<ellipse cx="120" cy="58" rx="3" ry="4" fill="white"/>' +
+    '<path d="M40 73 L45 75 L155 75 L160 73 Q158 74 155 74 L45 74 Q42 74 40 73 Z" fill="white" opacity="0.3"/>' +
+    '<!-- KOD Text -->' +
+    '<text x="100" y="110" font-family="serif" font-size="42" font-weight="bold" text-anchor="middle" fill="#C8102E">KOD</text>' +
+    '<line x1="60" y1="118" x2="90" y2="118" stroke="#C8102E" stroke-width="2"/>' +
+    '<polygon points="100,120 95,125 105,125" fill="#C8102E"/>' +
+    '<line x1="110" y1="118" x2="140" y2="118" stroke="#C8102E" stroke-width="2"/>' +
+    '<!-- KING OF DELANCEY Text -->' +
+    '<text x="100" y="145" font-family="serif" font-size="11" font-weight="600" letter-spacing="2" text-anchor="middle" fill="#C8102E">KING OF DELANCEY</text>' +
+    '<line x1="50" y1="152" x2="150" y2="152" stroke="#C8102E" stroke-width="1"/>' +
+    '<polygon points="100,155 97,160 103,160" fill="#C8102E"/>' +
+    '</g>' +
+    '</svg>';
+  
+  layer.appendChild(logo);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
 }
