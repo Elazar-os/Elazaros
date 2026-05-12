@@ -51,11 +51,13 @@ function extractTheme(cmd: string): string {
 }
 
 function detectCampfireIntent(cmd: string): boolean {
-  return /\b(campfire|fire)\b/i.test(cmd) && /\b(on|off|turn|start|stop|light|extinguish)\b/i.test(cmd);
+  return /\b(campfire|fire)\b/i.test(cmd) && /\b(on|off|turn|start|stop|light|extinguish|shut)\b/i.test(cmd);
 }
 
 function extractCampfireAction(cmd: string): 'on' | 'off' {
-  if (/\b(off|stop|extinguish|turn off)\b/i.test(cmd)) return 'off';
+  if (/\b(off|stop|extinguish|turn off|shut|shut off)\b/i.test(cmd)) return 'off';
+  return 'on';
+}
   return 'on';
 }
 
