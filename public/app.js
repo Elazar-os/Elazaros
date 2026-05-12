@@ -603,56 +603,62 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:200px;height:180px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:240px;height:200px;pointer-events:none;z-index:5;';
 
-  var crown = document.createElement('div');
-  crown.innerHTML = '<svg width="180" height="150" viewBox="0 0 180 150" fill="none" xmlns="http://www.w3.org/2000/svg">' +
-    '<defs>' +
-    '<linearGradient id="crownGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
-    '<stop offset="0%" style="stop-color:#E8102E;stop-opacity:1" />' +
-    '<stop offset="50%" style="stop-color:#C8102E;stop-opacity:1" />' +
-    '<stop offset="100%" style="stop-color:#A00D24;stop-opacity:1" />' +
-    '</linearGradient>' +
-    '<linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">' +
-    '<stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />' +
-    '<stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />' +
-    '</linearGradient>' +
-    '<filter id="shadow">' +
-    '<feDropShadow dx="0" dy="4" stdDeviation="4" flood-opacity="0.4"/>' +
-    '</filter>' +
-    '</defs>' +
-    '<g filter="url(#shadow)">' +
-    '<!-- Crown base -->' +
-    '<path d="M30 110 L30 130 L150 130 L150 110 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<!-- Crown body with elegant curves -->' +
-    '<path d="M30 110 Q40 90 50 70 Q60 50 70 40 Q80 30 90 25 Q100 30 110 40 Q120 50 130 70 Q140 90 150 110 Z" ' +
-    'fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2.5"/>' +
-    '<!-- Center peak -->' +
-    '<path d="M85 25 L90 10 L95 25 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<!-- Left peaks -->' +
-    '<path d="M60 45 L65 30 L70 45 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<path d="M35 85 L40 70 L45 85 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<!-- Right peaks -->' +
-    '<path d="M110 45 L115 30 L120 45 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<path d="M135 85 L140 70 L145 85 Z" fill="url(#crownGrad)" stroke="#8B0A1E" stroke-width="2"/>' +
-    '<!-- Jewels -->' +
-    '<circle cx="90" cy="15" r="5" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
-    '<circle cx="65" cy="35" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
-    '<circle cx="115" cy="35" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
-    '<circle cx="40" cy="75" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
-    '<circle cx="140" cy="75" r="4" fill="url(#goldGrad)" stroke="#B8860B" stroke-width="1"/>' +
-    '<!-- Decorative band -->' +
-    '<rect x="35" y="115" width="110" height="8" fill="#8B0A1E" opacity="0.3" rx="2"/>' +
-    '</g>' +
-    '</svg>';
-  
-  layer.appendChild(crown);
+  var campfire = document.createElement('div');
+  campfire.style.cssText = 'position:relative;width:100%;height:100%;';
+
+  var logs = document.createElement('div');
+  logs.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:160px;height:40px;';
+  logs.innerHTML = '<div style="position:absolute;bottom:0;left:10%;width:130px;height:16px;background:#4A3728;border-radius:8px;transform:rotate(-8deg)"></div>' +
+                   '<div style="position:absolute;bottom:0;right:10%;width:120px;height:16px;background:#5A4738;border-radius:8px;transform:rotate(8deg)"></div>' +
+                   '<div style="position:absolute;bottom:10px;left:20%;width:110px;height:14px;background:#3A2718;border-radius:7px;transform:rotate(-5deg)"></div>';
+  campfire.appendChild(logs);
+
+  var flameContainer = document.createElement('div');
+  flameContainer.style.cssText = 'position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:140px;height:120px;filter:blur(1px);';
+
+  var flame1 = document.createElement('div');
+  flame1.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:70px;height:100px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#E8102E 30%,#FF4444 60%,#FFA500 85%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.15s ease-in-out infinite alternate;opacity:0.8;';
+  flameContainer.appendChild(flame1);
+
+  var flame2 = document.createElement('div');
+  flame2.style.cssText = 'position:absolute;bottom:0;left:30%;transform:translateX(-50%);width:55px;height:80px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.18s ease-in-out infinite alternate-reverse;opacity:0.7;';
+  flameContainer.appendChild(flame2);
+
+  var flame3 = document.createElement('div');
+  flame3.style.cssText = 'position:absolute;bottom:0;left:70%;transform:translateX(-50%);width:50px;height:75px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.2s ease-in-out infinite alternate;opacity:0.7;';
+  flameContainer.appendChild(flame3);
+
+  var flameCore = document.createElement('div');
+  flameCore.style.cssText = 'position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:45px;height:65px;' +
+    'background:linear-gradient(to top,#FFA500 0%,#FFD700 50%,#FFEB99 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.12s ease-in-out infinite alternate;opacity:0.9;';
+  flameContainer.appendChild(flameCore);
+
+  campfire.appendChild(flameContainer);
+
+  var now = Date.now();
+  for (var i = 0; i < 6; i++) {
+    var smoke = document.createElement('div');
+    smoke.style.cssText = 'position:absolute;bottom:120px;width:70px;height:70px;' +
+      'background:radial-gradient(circle,rgba(200,16,46,0.25) 0%,rgba(200,16,46,0.15) 40%,transparent 70%);' +
+      'border-radius:50%;filter:blur(8px);opacity:0;animation:smoke-rise 8s ease-out infinite;';
+    var delay = (i * 1333) - (now % 8000);
+    smoke.style.animationDelay = (delay / 1000) + 's';
+    smoke.style.left = 'calc(50% - 35px + ' + (i * 12 - 30) + 'px)';
+    campfire.appendChild(smoke);
+  }
+
+  layer.appendChild(campfire);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
-}
-
-function toggleCampfire(enabled) {
-  // Removed - crown is always visible
 }
 
 function enterFullscreen() {
