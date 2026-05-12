@@ -570,33 +570,72 @@ function clearFeaturedItem() {
 }
 
 function addFlameAndSmoke() {
-  if (ST === 'sushi') return;
+  if (ST !== 'main' || SN !== 2) return;
   
   var existing = document.getElementById('flame-smoke-layer');
   if (existing) existing.remove();
 
+  var wrapsPanel = document.querySelector('.screen-body > .panel:nth-child(2)');
+  if (!wrapsPanel) return;
+
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.className = 'flame-smoke-layer';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:180px;height:140px;pointer-events:none;z-index:5;';
+
+  var campfire = document.createElement('div');
+  campfire.style.cssText = 'position:relative;width:100%;height:100%;';
+
+  var logs = document.createElement('div');
+  logs.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:120px;height:30px;';
+  logs.innerHTML = '<div style="position:absolute;bottom:0;left:10%;width:100px;height:12px;background:#4A3728;border-radius:6px;transform:rotate(-8deg)"></div>' +
+                   '<div style="position:absolute;bottom:0;right:10%;width:90px;height:12px;background:#5A4738;border-radius:6px;transform:rotate(8deg)"></div>' +
+                   '<div style="position:absolute;bottom:8px;left:20%;width:80px;height:10px;background:#3A2718;border-radius:5px;transform:rotate(-5deg)"></div>';
+  campfire.appendChild(logs);
 
   var flameContainer = document.createElement('div');
-  flameContainer.className = 'flame-container';
+  flameContainer.style.cssText = 'position:absolute;bottom:25px;left:50%;transform:translateX(-50%);width:100px;height:80px;filter:blur(1px);';
 
-  var flame = document.createElement('div');
-  flame.className = 'flame';
-  flameContainer.appendChild(flame);
+  var flame1 = document.createElement('div');
+  flame1.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:50px;height:70px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#E8102E 30%,#FF4444 60%,#FFA500 85%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.15s ease-in-out infinite alternate;opacity:0.8;';
+  flameContainer.appendChild(flame1);
+
+  var flame2 = document.createElement('div');
+  flame2.style.cssText = 'position:absolute;bottom:0;left:30%;transform:translateX(-50%);width:40px;height:55px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.18s ease-in-out infinite alternate-reverse;opacity:0.7;';
+  flameContainer.appendChild(flame2);
+
+  var flame3 = document.createElement('div');
+  flame3.style.cssText = 'position:absolute;bottom:0;left:70%;transform:translateX(-50%);width:35px;height:50px;' +
+    'background:linear-gradient(to top,#C8102E 0%,#FF4444 50%,#FFA500 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.2s ease-in-out infinite alternate;opacity:0.7;';
+  flameContainer.appendChild(flame3);
+
+  var flameCore = document.createElement('div');
+  flameCore.style.cssText = 'position:absolute;bottom:5px;left:50%;transform:translateX(-50%);width:30px;height:45px;' +
+    'background:linear-gradient(to top,#FFA500 0%,#FFD700 50%,#FFEB99 80%,transparent 100%);' +
+    'border-radius:50% 50% 50% 50%/60% 60% 40% 40%;animation:flicker 0.12s ease-in-out infinite alternate;opacity:0.9;';
+  flameContainer.appendChild(flameCore);
+
+  campfire.appendChild(flameContainer);
 
   var now = Date.now();
   for (var i = 0; i < 4; i++) {
     var smoke = document.createElement('div');
-    smoke.className = 'smoke-particle';
+    smoke.style.cssText = 'position:absolute;bottom:90px;width:50px;height:50px;' +
+      'background:radial-gradient(circle,rgba(200,16,46,0.12) 0%,rgba(200,16,46,0.06) 40%,transparent 70%);' +
+      'border-radius:50%;filter:blur(6px);opacity:0;animation:smoke-rise 8s ease-out infinite;';
     var delay = (i * 2000) - (now % 8000);
     smoke.style.animationDelay = (delay / 1000) + 's';
-    flameContainer.appendChild(smoke);
+    smoke.style.left = 'calc(50% - 25px + ' + (i * 10 - 15) + 'px)';
+    campfire.appendChild(smoke);
   }
 
-  layer.appendChild(flameContainer);
-  document.body.appendChild(layer);
+  layer.appendChild(campfire);
+  wrapsPanel.style.position = 'relative';
+  wrapsPanel.appendChild(layer);
 }
 
 function enterFullscreen() {
