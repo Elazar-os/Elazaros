@@ -435,7 +435,7 @@ function renderMain2(body, groups) {
   body.appendChild(col1);
 
   var wrapsItems = groups['Wraps'] || [];
-  body.appendChild(createPanel({ title: 'Wraps', items: wrapsItems, panelIndex: 1 }));
+  body.appendChild(createPanel({ title: 'Wraps', items: wrapsItems, pageSize: 7, panelIndex: 1 }));
 
   var sandwichItems = groups['Sandwiches'] || [];
   body.appendChild(createPanel({ title: 'Sandwiches', items: sandwichItems, pageSize: 9, panelIndex: 2 }));
@@ -445,7 +445,7 @@ function renderMain3(body, groups) {
   body.className = 'screen-body layout-main3';
 
   var plattersItems = groups['Platters'] || [];
-  body.appendChild(createPanel({ title: 'Platters', items: plattersItems, panelIndex: 0 }));
+  body.appendChild(createPanel({ title: 'Platters', items: plattersItems, pageSize: 4, panelIndex: 0 }));
 
   var shawarmaItems = groups['Shawarma'] || [];
   body.appendChild(createPanel({ title: 'Shawarma', items: shawarmaItems, panelIndex: 1 }));

@@ -1,3 +1,8 @@
+// Load env vars first, before any other imports
+if (process.env.NODE_ENV !== 'production') {
+  await import('dotenv/config');
+}
+
 import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 import * as schema from "@shared/schema";
