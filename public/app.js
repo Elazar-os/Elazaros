@@ -623,7 +623,41 @@ function addFlameAndSmoke() {
   var INNER = 18;
   var MID = 28;
   var OUTER = 38;
-  var t1 = 0, t2 = 0, t3 = 0;
+  var t1 = Math.random() * 10;
+  var t2 = Math.random() * 10;
+  var t3 = Math.random() * 10;
+
+  function flameShape(x, y, width, height, sway, stretch, tilt) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(tilt * 0.02);
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.bezierCurveTo(
+      -width * 0.6 - sway, -height * 0.3,
+      -width * 0.3,        -height * 0.8 - stretch,
+      0,                   -height
+    );
+    ctx.bezierCurveTo(
+      width * 0.3,         -height * 0.8 - stretch,
+      width * 0.6 + sway,  -height * 0.3,
+      0,                   0
+    );
+    ctx.closePath();
+    ctx.restore();
+  }
+
+  function drawFlameLayer(size, color, t, speed) {
+    var sway = Math.sin(t * speed) * (3 + Math.random() * 1.2);
+    var stretch = Math.cos(t * speed * 0.7) * (5 + Math.random() * 1.5);
+    var tilt = Math.sin(t * speed * 0.4) * (1 + Math.random() * 0.3);
+    ctx.save();
+    ctx.translate(centerX, baseY - 40);
+    flameShape(0, 0, size, size * 2, sway, stretch, tilt);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.restore();
+  }
 
   function drawLogs() {
     ctx.save();
@@ -648,30 +682,6 @@ function addFlameAndSmoke() {
     ctx.restore();
   }
 
-  function flameShape(x, y, width, height, sway, stretch) {
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.bezierCurveTo(
-      x - width * 0.6 - sway, y - height * 0.3,
-      x - width * 0.3,        y - height * 0.8 - stretch,
-      x,                      y - height
-    );
-    ctx.bezierCurveTo(
-      x + width * 0.3,        y - height * 0.8 - stretch,
-      x + width * 0.6 + sway, y - height * 0.3,
-      x,                      y
-    );
-    ctx.closePath();
-  }
-
-  function drawFlameLayer(size, color, t, speed) {
-    var sway = Math.sin(t * speed) * 4;
-    var stretch = Math.cos(t * speed * 0.7) * 6;
-    flameShape(centerX, baseY - 40, size, size * 2, sway, stretch);
-    ctx.fillStyle = color;
-    ctx.fill();
-  }
-
   function drawGlow() {
     var glow = ctx.createRadialGradient(centerX, baseY, 5, centerX, baseY, 80);
     glow.addColorStop(0, 'rgba(174, 49, 54, 0.35)');
@@ -684,9 +694,9 @@ function addFlameAndSmoke() {
     ctx.clearRect(0, 0, W, H);
     drawGlow();
     drawLogs();
-    t1 += 0.03;
-    t2 += 0.025;
-    t3 += 0.02;
+    t1 += 0.035;
+    t2 += 0.028;
+    t3 += 0.022;
     drawFlameLayer(OUTER, 'rgba(174, 49, 54, 0.55)', t1, 1.0);
     drawFlameLayer(MID, 'rgba(255, 140, 40, 0.85)', t2, 1.3);
     drawFlameLayer(INNER, 'rgba(255, 240, 200, 0.95)', t3, 1.6);
