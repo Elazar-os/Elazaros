@@ -58,8 +58,6 @@ function extractCampfireAction(cmd: string): 'on' | 'off' {
   if (/\b(off|stop|extinguish|turn off|shut|shut off)\b/i.test(cmd)) return 'off';
   return 'on';
 }
-  return 'on';
-}
 
 function detect86Intent(cmd: string): boolean {
   return /\b(86|eighty[\s-]?six|disable|turn off|remove)\b/i.test(cmd);
