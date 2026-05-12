@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Screen 2 - Campfire Test</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #0a0a0a;
+      font-family: 'Barlow Condensed', sans-serif;
+      color: #e8e8e8;
+      overflow: hidden;
+    }
+
+    .screen-wrap {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #C8102E;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 32px;
+      letter-spacing: 3px;
+      color: #C8102E;
+    }
+
+    .header-subtitle {
+      font-size: 18px;
+      color: #888;
+    }
+
+    .screen-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .panel {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+      border-radius: 12px;
+      border: 1px solid #2a2a2a;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .panel-header {
+      margin-bottom: 16px;
+      border-bottom: 2px solid #C8102E;
+      padding-bottom: 12px;
+    }
+
+    .panel-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: #C8102E;
+    }
+
+    .panel-items {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .mi-name {
+      font-size: 18px;
+      color: #e8e8e8;
+    }
+
+    .mi-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      color: #C8102E;
+    }
+
+    /* Campfire container - positioned under Wraps panel (2nd panel) */
+    #flame-smoke-layer {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200px;
+      height: 200px;
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Placeholder for your campfire animation */
+    .campfire-placeholder {
+      width: 180px;
+      height: 180px;
+      background: radial-gradient(circle at 50% 80%, rgba(200, 16, 46, 0.3), transparent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+    }
+  </style>
+</head>
+<body>
+  <div class="screen-wrap">
+    <header class="screen-header">
+      <div class="header-left">
+        <span class="header-logo">King of Delancey</span>
+        <span class="header-subtitle">Est. 2009</span>
+      </div>
+      <div class="header-right">
+        <span style="font-size: 18px; color: #888;">Main Screen 2</span>
+      </div>
+    </header>
+
+    <main class="screen-body">
+      <!-- Column 1: Burgers -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Burgers</div>
+        </div>
+        <div class="panel-items">
+          <div class="menu-item">
+            <div class="mi-name">Burger</div>
+            <div class="mi-price">15.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Double Beef Burger</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Delancey Burger</div>
+            <div class="mi-price">23.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Chili Burger</div>
+            <div class="mi-price">27.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Kansas City Burger</div>
+            <div class="mi-price">29.95</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Column 2: Wraps (with campfire) -->
+      <div class="panel" style="position: relative;">
+        <div class="panel-header">
+          <div class="panel-title">Wraps</div>
+        </div>
+        <div class="panel-items">
+          <div class="menu-item">
+            <div class="mi-name">Classic Grilled Chicken Wrap</div>
+            <div class="mi-price">22.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Pretzel Chicken Wrap</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Schnitzel Wrap</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Baby Chicken Wrap</div>
+            <div class="mi-price">24.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Cornflake Chicken Wrap</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Steak Wrap</div>
+            <div class="mi-price">27.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Pastrami Schnitzel Wrap</div>
+            <div class="mi-price">24.95</div>
+          </div>
+        </div>
+
+        <!-- CAMPFIRE GOES HERE -->
+        <div id="flame-smoke-layer">
+          <div class="campfire-placeholder">🔥</div>
+        </div>
+      </div>
+
+      <!-- Column 3: Sandwiches -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">Sandwiches</div>
+        </div>
+        <div class="panel-items">
+          <div class="menu-item">
+            <div class="mi-name">Grilled Chicken Sandwich</div>
+            <div class="mi-price">22.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Schnitzel Sandwich</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Baby Chicken Sandwich</div>
+            <div class="mi-price">24.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Cornflake Chicken Sandwich</div>
+            <div class="mi-price">21.95</div>
+          </div>
+          <div class="menu-item">
+            <div class="mi-name">Pretzel Chicken Sandwich</div>
+            <div class="mi-price">21.95</div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // YOUR CAMPFIRE ANIMATION CODE GOES HERE
+    // Replace the placeholder div with your canvas/animation
+    
+    console.log('Campfire test page loaded');
+    console.log('Replace the #flame-smoke-layer content with your campfire animation');
+  </script>
+</body>
+</html>

@@ -603,15 +603,89 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:200px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:200px;pointer-events:none;z-index:5;';
 
-  var img = document.createElement('img');
-  img.src = '/Copilot_20260512_174931.png';
-  img.style.cssText = 'width:100%;height:auto;max-width:180px;';
+  var canvas = document.createElement('canvas');
+  canvas.id = 'kodCampfire';
+  canvas.width = 200;
+  canvas.height = 200;
+  canvas.style.cssText = 'width:100%;height:100%;';
   
-  layer.appendChild(img);
+  layer.appendChild(canvas);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
+
+  var ctx = canvas.getContext('2d');
+  var W = canvas.width;
+  var H = canvas.height;
+  var centerX = W / 2;
+  var baseY = H * 0.78;
+  var FLAME_HEIGHT = 60;
+  var flameGradient;
+
+  function buildGradients() {
+    flameGradient = ctx.createRadialGradient(centerX, baseY - 20, 5, centerX, baseY - 40, 60);
+    flameGradient.addColorStop(0, 'rgba(255, 240, 200, 1)');
+    flameGradient.addColorStop(0.3, 'rgba(255, 160, 60, 0.9)');
+    flameGradient.addColorStop(0.6, 'rgba(255, 100, 40, 0.7)');
+    flameGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  }
+  buildGradients();
+
+  function drawLogs() {
+    ctx.save();
+    ctx.translate(centerX, baseY + 10);
+    ctx.fillStyle = '#3b2a1f';
+    ctx.strokeStyle = '#1d140f';
+    ctx.lineWidth = 3;
+    ctx.save();
+    ctx.rotate(-0.35);
+    ctx.beginPath();
+    ctx.roundRect(-50, -10, 100, 20, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    ctx.save();
+    ctx.rotate(0.35);
+    ctx.beginPath();
+    ctx.roundRect(-50, -10, 100, 20, 10);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    ctx.restore();
+  }
+
+  var flicker = 0;
+  var flickerSpeed = 0.04;
+
+  function drawFlame() {
+    flicker += flickerSpeed;
+    var offset = Math.sin(flicker) * 4;
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = flameGradient;
+    ctx.beginPath();
+    ctx.ellipse(centerX, baseY - 40 + offset, 22, FLAME_HEIGHT / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawGlow() {
+    var glow = ctx.createRadialGradient(centerX, baseY, 5, centerX, baseY, 80);
+    glow.addColorStop(0, 'rgba(174, 49, 54, 0.35)');
+    glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    drawGlow();
+    drawLogs();
+    drawFlame();
+    requestAnimationFrame(loop);
+  }
+  loop();
 }
 
 function enterFullscreen() {
