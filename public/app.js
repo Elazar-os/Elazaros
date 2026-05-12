@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v11_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v13_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
@@ -591,8 +591,7 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:240px;height:200px;pointer-events:none;z-index:5;transition:opacity 0.5s ease;';
-  layer.style.opacity = campfireEnabled ? '1' : '0';
+  layer.style.cssText = 'position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:240px;height:200px;pointer-events:none;z-index:5;transition:opacity 0.5s ease;opacity:1;';
 
   if (!campfireEnabled) {
     var logo = document.createElement('div');
@@ -661,7 +660,7 @@ function addFlameAndSmoke() {
   for (var i = 0; i < 6; i++) {
     var smoke = document.createElement('div');
     smoke.style.cssText = 'position:absolute;bottom:120px;width:70px;height:70px;' +
-      'background:radial-gradient(circle,rgba(200,16,46,0.15) 0%,rgba(200,16,46,0.08) 40%,transparent 70%);' +
+      'background:radial-gradient(circle,rgba(200,16,46,0.25) 0%,rgba(200,16,46,0.15) 40%,transparent 70%);' +
       'border-radius:50%;filter:blur(8px);opacity:0;animation:smoke-rise 8s ease-out infinite;';
     var delay = (i * 1333) - (now % 8000);
     smoke.style.animationDelay = (delay / 1000) + 's';
@@ -678,7 +677,7 @@ function toggleCampfire(enabled) {
   campfireEnabled = enabled;
   var layer = document.getElementById('flame-smoke-layer');
   if (layer) {
-    layer.style.opacity = enabled ? '1' : '0';
+    layer.style.opacity = '0';
     setTimeout(function() {
       addFlameAndSmoke();
     }, 500);
