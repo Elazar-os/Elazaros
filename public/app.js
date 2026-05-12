@@ -620,17 +620,10 @@ function addFlameAndSmoke() {
   var H = canvas.height;
   var centerX = W / 2;
   var baseY = H * 0.78;
-  var FLAME_HEIGHT = 60;
-  var flameGradient;
-
-  function buildGradients() {
-    flameGradient = ctx.createRadialGradient(centerX, baseY - 20, 5, centerX, baseY - 40, 60);
-    flameGradient.addColorStop(0, 'rgba(255, 240, 200, 1)');
-    flameGradient.addColorStop(0.3, 'rgba(255, 160, 60, 0.9)');
-    flameGradient.addColorStop(0.6, 'rgba(255, 100, 40, 0.7)');
-    flameGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  }
-  buildGradients();
+  var INNER = 18;
+  var MID = 28;
+  var OUTER = 38;
+  var t1 = 0, t2 = 0, t3 = 0;
 
   function drawLogs() {
     ctx.save();
@@ -655,19 +648,28 @@ function addFlameAndSmoke() {
     ctx.restore();
   }
 
-  var flicker = 0;
-  var flickerSpeed = 0.04;
-
-  function drawFlame() {
-    flicker += flickerSpeed;
-    var offset = Math.sin(flicker) * 4;
-    ctx.save();
-    ctx.globalAlpha = 0.9;
-    ctx.fillStyle = flameGradient;
+  function flameShape(x, y, width, height, sway, stretch) {
     ctx.beginPath();
-    ctx.ellipse(centerX, baseY - 40 + offset, 22, FLAME_HEIGHT / 2, 0, 0, Math.PI * 2);
+    ctx.moveTo(x, y);
+    ctx.bezierCurveTo(
+      x - width * 0.6 - sway, y - height * 0.3,
+      x - width * 0.3,        y - height * 0.8 - stretch,
+      x,                      y - height
+    );
+    ctx.bezierCurveTo(
+      x + width * 0.3,        y - height * 0.8 - stretch,
+      x + width * 0.6 + sway, y - height * 0.3,
+      x,                      y
+    );
+    ctx.closePath();
+  }
+
+  function drawFlameLayer(size, color, t, speed) {
+    var sway = Math.sin(t * speed) * 4;
+    var stretch = Math.cos(t * speed * 0.7) * 6;
+    flameShape(centerX, baseY - 40, size, size * 2, sway, stretch);
+    ctx.fillStyle = color;
     ctx.fill();
-    ctx.restore();
   }
 
   function drawGlow() {
@@ -682,7 +684,12 @@ function addFlameAndSmoke() {
     ctx.clearRect(0, 0, W, H);
     drawGlow();
     drawLogs();
-    drawFlame();
+    t1 += 0.03;
+    t2 += 0.025;
+    t3 += 0.02;
+    drawFlameLayer(OUTER, 'rgba(174, 49, 54, 0.55)', t1, 1.0);
+    drawFlameLayer(MID, 'rgba(255, 140, 40, 0.85)', t2, 1.3);
+    drawFlameLayer(INNER, 'rgba(255, 240, 200, 0.95)', t3, 1.6);
     requestAnimationFrame(loop);
   }
   loop();
