@@ -603,15 +603,73 @@ function addFlameAndSmoke() {
 
   var layer = document.createElement('div');
   layer.id = 'flame-smoke-layer';
-  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:200px;height:200px;pointer-events:none;z-index:5;display:flex;align-items:center;justify-content:center;';
+  layer.style.cssText = 'position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:420px;height:420px;pointer-events:none;z-index:5;';
 
-  var img = document.createElement('img');
-  img.src = '/Copilot_20260512_174931.png';
-  img.style.cssText = 'width:100%;height:auto;max-width:180px;';
+  var canvas = document.createElement('canvas');
+  canvas.width = 420;
+  canvas.height = 420;
+  canvas.style.cssText = 'width:100%;height:100%;border-radius:16px;background:radial-gradient(circle at 50% 100%, #1a1a1a 0, #050505 60%);box-shadow:0 0 40px rgba(0,0,0,0.9),0 0 80px rgba(174,49,54,0.5);';
   
-  layer.appendChild(img);
+  layer.appendChild(canvas);
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
+
+  var ctx = canvas.getContext('2d');
+  var W = 420, H = 420;
+  var centerX = W / 2, baseY = H * 0.78;
+  var particles = [];
+  var maxParticles = 220;
+
+  function rand(min, max) { return Math.random() * (max - min) + min; }
+
+  function createParticle() {
+    var spread = 40;
+    var x = centerX + rand(-spread, spread);
+    var y = baseY + rand(-10, 10);
+    var size = rand(8, 22);
+    var life = rand(1.1, 2.2);
+    var colors = ['rgba(174,49,54,1)', 'rgba(255,120,60,1)', 'rgba(255,190,90,1)', 'rgba(255,240,200,1)'];
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    particles.push({ x: x, y: y, size: size, life: life, maxLife: life, vx: rand(-0.4, 0.4), vy: rand(-1.8, -3.2), color: color });
+  }
+
+  function drawLogs() {
+    ctx.save();
+    ctx.translate(centerX, baseY + 10);
+    ctx.fillStyle = '#3b2a1f';
+    ctx.fillRect(-60, 0, 120, 18);
+    ctx.fillRect(-50, 15, 100, 15);
+    ctx.fillStyle = '#2a1f15';
+    ctx.fillRect(-58, 2, 3, 14);
+    ctx.fillRect(-20, 2, 3, 14);
+    ctx.fillRect(18, 2, 3, 14);
+    ctx.restore();
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    drawLogs();
+    while (particles.length < maxParticles) createParticle();
+    for (var i = particles.length - 1; i >= 0; i--) {
+      var p = particles[i];
+      p.life -= 0.016;
+      if (p.life <= 0) { particles.splice(i, 1); continue; }
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy -= 0.02;
+      var alpha = p.life / p.maxLife;
+      var r = p.size * alpha;
+      var grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+      grad.addColorStop(0, p.color.replace('1)', alpha + ')'));
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
 }
 
 function enterFullscreen() {
