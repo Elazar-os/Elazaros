@@ -659,13 +659,35 @@ function addFlameAndSmoke() {
   var flickerSpeed = 0.04;
 
   function drawFlame() {
-    flicker += flickerSpeed;
-    var offset = Math.sin(flicker) * 4;
+    flicker += flickerSpeed * 2;
+    var flicker2 = flicker * 1.3;
+    var flicker3 = flicker * 0.7;
+    
+    var sway = Math.sin(flicker) * 3;
+    var heightVar = Math.sin(flicker2) * 8;
+    var widthVar = Math.sin(flicker3) * 4;
+    var alphaFlicker = 0.85 + Math.sin(flicker * 2) * 0.15;
+    
     ctx.save();
-    ctx.globalAlpha = 0.9;
+    ctx.globalAlpha = alphaFlicker;
     ctx.fillStyle = flameGradient;
     ctx.beginPath();
-    ctx.ellipse(centerX, baseY - 40 + offset, 22, FLAME_HEIGHT / 2, 0, 0, Math.PI * 2);
+    
+    var baseWidth = 28 + widthVar;
+    var tipY = baseY - 55 + heightVar;
+    
+    ctx.moveTo(centerX - baseWidth, baseY);
+    ctx.bezierCurveTo(
+      centerX - baseWidth, baseY - 20,
+      centerX - 15 + sway, baseY - 35,
+      centerX + sway, tipY
+    );
+    ctx.bezierCurveTo(
+      centerX + 15 + sway, baseY - 35,
+      centerX + baseWidth, baseY - 20,
+      centerX + baseWidth, baseY
+    );
+    ctx.closePath();
     ctx.fill();
     ctx.restore();
   }
