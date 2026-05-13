@@ -30,7 +30,8 @@ if (ST === 'sushi') {
   document.getElementById('header-logo').textContent = 'Sushi Bar';
   document.getElementById('header-subtitle').textContent = 'King of Delancey';
 } else {
-  document.getElementById('header-logo').textContent = 'King of Delancey';
+  var logoEl = document.getElementById('header-logo');
+  logoEl.innerHTML = '<svg width="310" height="70" viewBox="0 0 310 80" xmlns="http://www.w3.org/2000/svg"><g fill="#ae3136"><polygon points="20,60 10,25 35,40" /><polygon points="35,40 55,10 75,40" /><polygon points="75,40 100,25 90,60" /></g><text x="120" y="55" font-family="Bebas Neue, sans-serif" font-size="48" letter-spacing="2" fill="#e8e8e8">KING OF DELANCEY</text></svg>';
   document.getElementById('header-subtitle').textContent = 'Est. 2009';
 }
 document.getElementById('header-screen-id').textContent = (ST === 'sushi' ? 'Sushi' : 'Main') + ' Screen ' + SN;
