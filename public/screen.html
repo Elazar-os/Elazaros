@@ -10,7 +10,7 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   <title>Menu Display - King of Delancey</title>
-  <link rel="stylesheet" href="/styles.css?v=v38">
+  <link rel="stylesheet" href="/styles.css?v=v39">
   <style>
     /* Ambient background glow - Main screens only */
     body.theme-main #kod-bg-ambient {
@@ -23,27 +23,27 @@
       pointer-events: none;
       background: radial-gradient(
         circle at 50% 50%,
-        rgba(174, 49, 54, 0.12),
-        rgba(0, 0, 0, 0.9) 60%
+        rgba(174, 49, 54, 0.15),
+        rgba(0, 0, 0, 0) 60%
       );
-      animation: kodGlowDrift 22s ease-in-out infinite alternate;
-      filter: blur(40px);
+      animation: kodGlowPulse 8s ease-in-out infinite alternate;
+      filter: blur(60px);
     }
     body.theme-sushi #kod-bg-ambient {
       display: none;
     }
-    @keyframes kodGlowDrift {
+    @keyframes kodGlowPulse {
       0% {
-        background-position: 50% 50%;
-        background-size: 100% 100%;
+        opacity: 0.6;
+        transform: scale(1);
       }
       50% {
-        background-position: 48% 52%;
-        background-size: 108% 108%;
+        opacity: 1;
+        transform: scale(1.1);
       }
       100% {
-        background-position: 52% 48%;
-        background-size: 100% 100%;
+        opacity: 0.6;
+        transform: scale(1);
       }
     }
   </style>
