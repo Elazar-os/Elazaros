@@ -620,44 +620,17 @@ function addFlameAndSmoke() {
   var H = canvas.height;
   var centerX = W / 2;
   var baseY = H * 0.78;
-  var INNER = 18;
-  var MID = 28;
-  var OUTER = 38;
-  var t1 = Math.random() * 10;
-  var t2 = Math.random() * 10;
-  var t3 = Math.random() * 10;
+  var FLAME_HEIGHT = 60;
+  var flameGradient;
 
-  function flameShape(x, y, width, height, sway, stretch, tilt) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(tilt * 0.02);
-    ctx.beginPath();
-    ctx.moveTo(0, 0);
-    ctx.bezierCurveTo(
-      -width * 0.6 - sway, -height * 0.3,
-      -width * 0.3,        -height * 0.8 - stretch,
-      0,                   -height
-    );
-    ctx.bezierCurveTo(
-      width * 0.3,         -height * 0.8 - stretch,
-      width * 0.6 + sway,  -height * 0.3,
-      0,                   0
-    );
-    ctx.closePath();
-    ctx.restore();
+  function buildGradients() {
+    flameGradient = ctx.createRadialGradient(centerX, baseY - 20, 5, centerX, baseY - 40, 60);
+    flameGradient.addColorStop(0, 'rgba(255, 240, 200, 1)');
+    flameGradient.addColorStop(0.3, 'rgba(255, 160, 60, 0.9)');
+    flameGradient.addColorStop(0.6, 'rgba(255, 100, 40, 0.7)');
+    flameGradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
   }
-
-  function drawFlameLayer(size, color, t, speed) {
-    var sway = Math.sin(t * speed) * (3 + Math.random() * 1.2);
-    var stretch = Math.cos(t * speed * 0.7) * (5 + Math.random() * 1.5);
-    var tilt = Math.sin(t * speed * 0.4) * (1 + Math.random() * 0.3);
-    ctx.save();
-    ctx.translate(centerX, baseY - 40);
-    flameShape(0, 0, size, size * 2, sway, stretch, tilt);
-    ctx.fillStyle = color;
-    ctx.fill();
-    ctx.restore();
-  }
+  buildGradients();
 
   function drawLogs() {
     ctx.save();
@@ -682,6 +655,21 @@ function addFlameAndSmoke() {
     ctx.restore();
   }
 
+  var flicker = 0;
+  var flickerSpeed = 0.04;
+
+  function drawFlame() {
+    flicker += flickerSpeed;
+    var offset = Math.sin(flicker) * 4;
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    ctx.fillStyle = flameGradient;
+    ctx.beginPath();
+    ctx.ellipse(centerX, baseY - 40 + offset, 22, FLAME_HEIGHT / 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+
   function drawGlow() {
     var glow = ctx.createRadialGradient(centerX, baseY, 5, centerX, baseY, 80);
     glow.addColorStop(0, 'rgba(174, 49, 54, 0.35)');
@@ -694,12 +682,7 @@ function addFlameAndSmoke() {
     ctx.clearRect(0, 0, W, H);
     drawGlow();
     drawLogs();
-    t1 += 0.035;
-    t2 += 0.028;
-    t3 += 0.022;
-    drawFlameLayer(OUTER, 'rgba(174, 49, 54, 0.55)', t1, 1.0);
-    drawFlameLayer(MID, 'rgba(255, 140, 40, 0.85)', t2, 1.3);
-    drawFlameLayer(INNER, 'rgba(255, 240, 200, 0.95)', t3, 1.6);
+    drawFlame();
     requestAnimationFrame(loop);
   }
   loop();
