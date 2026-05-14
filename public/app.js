@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v26_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v27_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 // Auto-clear old cache versions
@@ -79,6 +79,23 @@ function cacheMenu(data) {
 function showCachedIndicator(show) {
   var brand = document.getElementById('footer-brand');
   if (brand) brand.textContent = show ? 'Cached' : 'KING OF DELANCEY';
+}
+
+function toggleCampfire(enabled) {
+  console.log('toggleCampfire called with:', enabled);
+  campfireEnabled = enabled;
+  var layer = document.getElementById('flame-smoke-layer');
+  if (layer) {
+    layer.style.display = enabled ? 'block' : 'none';
+    console.log('Campfire layer display set to:', layer.style.display);
+    var brand = document.getElementById('footer-brand');
+    if (brand) brand.textContent = enabled ? 'CAMPFIRE ON' : 'CAMPFIRE OFF';
+    setTimeout(function() {
+      if (brand) brand.textContent = 'KING OF DELANCEY';
+    }, 3000);
+  } else {
+    console.log('Campfire layer not found');
+  }
 }
 
 async function pollScreenState() {
@@ -719,18 +736,6 @@ function addFlameAndSmoke() {
     requestAnimationFrame(loop);
   }
   loop();
-}
-
-function toggleCampfire(enabled) {
-  console.log('toggleCampfire called with:', enabled);
-  campfireEnabled = enabled;
-  var layer = document.getElementById('flame-smoke-layer');
-  if (layer) {
-    layer.style.display = enabled ? 'block' : 'none';
-    console.log('Campfire layer display set to:', layer.style.display);
-  } else {
-    console.log('Campfire layer not found');
-  }
 }
 
 function enterFullscreen() {
