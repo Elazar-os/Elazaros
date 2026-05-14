@@ -42,28 +42,11 @@
         transform: scale(1.05);
       }
     }
-
-    /* Vignette effect */
-    #kod-vignette {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-      background: radial-gradient(
-        circle at center,
-        rgba(0, 0, 0, 0) 40%,
-        rgba(0, 0, 0, 0.35) 100%
-      );
-    }
   </style>
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
 
   <div id="kod-bg-ambient"></div>
-  <div id="kod-vignette"></div>
 
   <div class="screen-wrap" id="screen-wrap">
     <header class="screen-header">
