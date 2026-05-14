@@ -1,13 +1,13 @@
-var CACHE_NAME = 'kod-screen-v46';
+var CACHE_NAME = 'kod-screen-v47';
 var ASSETS = [
   '/screen.html',
-  '/styles.css?v=v46',
-  '/app.js?v=v46',
+  '/styles.css?v=v47',
+  '/app.js?v=v47',
   '/screen-manifest.json'
 ];
 
 self.addEventListener('install', function(e) {
-  console.log('[SW] Installing v46...');
+  console.log('[SW] Installing v47...');
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(ASSETS);

@@ -82,27 +82,35 @@ function showCachedIndicator(show) {
 }
 
 function toggleCampfire(enabled) {
-  console.log('toggleCampfire called with:', enabled);
+  console.log('[CAMPFIRE] toggleCampfire called with:', enabled);
   campfireEnabled = enabled;
   var layer = document.getElementById('flame-smoke-layer');
   if (layer) {
     layer.style.display = enabled ? 'block' : 'none';
-    console.log('Campfire layer display set to:', layer.style.display);
+    console.log('[CAMPFIRE] Layer display set to:', layer.style.display);
     var brand = document.getElementById('footer-brand');
-    if (brand) brand.textContent = enabled ? 'CAMPFIRE ON' : 'CAMPFIRE OFF';
+    if (brand) {
+      brand.textContent = enabled ? 'CAMPFIRE ON' : 'CAMPFIRE OFF';
+      console.log('[CAMPFIRE] Footer updated to:', brand.textContent);
+    }
     setTimeout(function() {
       if (brand) brand.textContent = 'KING OF DELANCEY';
     }, 3000);
   } else {
-    console.log('Campfire layer not found');
+    console.log('[CAMPFIRE] ERROR: Layer not found!');
   }
 }
 
 async function pollScreenState() {
   try {
+    console.log('[POLL] Fetching screen state...');
     var r = await fetchWithTimeout('/api/screen-state', 5000);
-    if (!r.ok) return;
+    if (!r.ok) {
+      console.log('[POLL] Response not OK:', r.status);
+      return;
+    }
     var state = await r.json();
+    console.log('[POLL] Received state:', state);
 
     if (pollLastVersion === null) {
       pollLastVersion = state.version;
@@ -145,7 +153,7 @@ async function pollScreenState() {
 
     if (campfireChanged) {
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
-      console.log('Campfire state changed to:', campfireEnabled);
+      console.log('[POLL] Campfire state changed to:', campfireEnabled);
       toggleCampfire(campfireEnabled);
     }
 
@@ -787,8 +795,14 @@ document.addEventListener('keydown', function(e) {
 });
 
 async function init() {
+  console.log('[INIT] Starting app initialization...');
+  console.log('[INIT] Screen:', ST, 'Number:', SN);
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').catch(function() {});
+    navigator.serviceWorker.register('/sw.js').then(function() {
+      console.log('[INIT] Service worker registered');
+    }).catch(function(err) {
+      console.log('[INIT] Service worker registration failed:', err);
+    });
   }
 
   var cachedMenu = getCachedMenu(true);
