@@ -219,6 +219,12 @@ body{
   letter-spacing:1px;
 }
 
+@keyframes panelGlow{
+  0%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 18px rgba(174,49,54,0.10)}
+  50%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 26px rgba(174,49,54,0.16)}
+  100%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 18px rgba(174,49,54,0.10)}
+}
+
 .panel{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);
@@ -229,6 +235,7 @@ body{
   overflow:hidden;
   position:relative;
   min-height:0;
+  animation:panelGlow 14s ease-in-out infinite;
 }
 
 .panel::before{
@@ -422,6 +429,7 @@ body{
   justify-content:center;
   overflow:hidden;
   position:relative;
+  animation:panelGlow 14s ease-in-out infinite;
 }
 
 .kod-brand-strip::before{
