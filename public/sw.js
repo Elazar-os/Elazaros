@@ -1,8 +1,8 @@
-var CACHE_NAME = 'kod-tv-v12';
+var CACHE_NAME = 'kod-tv-v46';
 var ASSETS = [
   '/screen.html',
-  '/styles.css?v=v12',
-  '/app.js?v=v12',
+  '/styles.css?v=v46',
+  '/app.js?v=v46',
   '/manifest.json'
 ];
 
@@ -47,12 +47,12 @@ self.addEventListener('fetch', function(e) {
 
   if (e.request.mode === 'navigate' || url.pathname.match(/\.(html|css|js|json|woff2?)(\?.*)?$/)) {
     e.respondWith(
-      caches.match(e.request).then(function(cached) {
-        return cached || fetch(e.request).then(function(res) {
-          var clone = res.clone();
-          caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
-          return res;
-        });
+      fetch(e.request).then(function(res) {
+        var clone = res.clone();
+        caches.open(CACHE_NAME).then(function(cache) { cache.put(e.request, clone); });
+        return res;
+      }).catch(function() {
+        return caches.match(e.request);
       })
     );
     return;
