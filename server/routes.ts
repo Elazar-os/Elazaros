@@ -285,6 +285,17 @@ export async function registerRoutes(
     }
   });
 
+  app.get('/screen-manifest.json', (_req, res) => {
+    const manifestPath = path.join(publicPath, 'screen-manifest.json');
+    if (fs.existsSync(manifestPath)) {
+      res.set('Content-Type', 'application/manifest+json');
+      res.set('Cache-Control', 'no-cache');
+      res.sendFile(manifestPath);
+    } else {
+      res.status(404).send();
+    }
+  });
+
   app.get('/boss-icon-192.svg', (_req, res) => {
     const iconPath = path.join(publicPath, 'boss-icon-192.svg');
     if (fs.existsSync(iconPath)) {

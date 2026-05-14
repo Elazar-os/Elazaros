@@ -1,0 +1,17 @@
+{
+  "name": "King of Delancey Menu Display",
+  "short_name": "KOD Menu",
+  "description": "King of Delancey Digital Menu Board",
+  "start_url": "/screen/main/2",
+  "display": "fullscreen",
+  "background_color": "#0a0a0a",
+  "theme_color": "#C8102E",
+  "orientation": "landscape",
+  "icons": [
+    {
+      "src": "/boss-icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}

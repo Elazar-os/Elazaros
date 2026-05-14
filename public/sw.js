@@ -1,29 +1,34 @@
-var CACHE_NAME = 'kod-tv-v46';
+var CACHE_NAME = 'kod-screen-v46';
 var ASSETS = [
   '/screen.html',
   '/styles.css?v=v46',
   '/app.js?v=v46',
-  '/manifest.json'
+  '/screen-manifest.json'
 ];
 
 self.addEventListener('install', function(e) {
+  console.log('[SW] Installing v46...');
   e.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(ASSETS);
     }).then(function() {
+      console.log('[SW] Skip waiting and activate immediately');
       return self.skipWaiting();
     })
   );
 });
 
 self.addEventListener('activate', function(e) {
+  console.log('[SW] Activating v46...');
   e.waitUntil(
     caches.keys().then(function(names) {
+      console.log('[SW] Deleting old caches:', names.filter(function(n) { return n !== CACHE_NAME; }));
       return Promise.all(
         names.filter(function(n) { return n !== CACHE_NAME; })
           .map(function(n) { return caches.delete(n); })
       );
     }).then(function() {
+      console.log('[SW] Claiming clients');
       return self.clients.claim();
     })
   );
