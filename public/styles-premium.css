@@ -1,0 +1,840 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&display=swap');
+
+/* ============================================
+   PREMIUM KING OF DELANCEY - DIGITAL MENU
+   Cinematic, Modern, High-End Design
+   ============================================ */
+
+*,*::before,*::after{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+html,body{
+  overflow:hidden!important;
+  touch-action:none;
+  -ms-touch-action:none;
+  overscroll-behavior:none;
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;left:0;right:0;bottom:0;
+}
+
+body{
+  font-family:'Barlow Condensed',sans-serif;
+  background:var(--bg);
+  color:var(--item-name);
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  -webkit-touch-callout:none;
+  -webkit-tap-highlight-color:transparent;
+  touch-action:none;
+  overscroll-behavior:none;
+}
+
+::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+*{scrollbar-width:none!important;-ms-overflow-style:none!important}
+
+/* ============================================
+   PREMIUM COLOR THEMES
+   ============================================ */
+
+.theme-main{
+  --bg:#0a0a0a;
+  --surface:#121212;
+  --card:rgba(26,26,26,0.85);
+  --border:#2a2a2a;
+  --border-soft:rgba(255,255,255,0.06);
+  --accent:#ae3136;
+  --accent-glow:rgba(174,49,54,0.15);
+  --accent-bright:#c8384d;
+  --cat:#e8e8e8;
+  --item-name:#e8e8e8;
+  --item-desc:#888888;
+  --item-price:#ae3136;
+  --glass-bg:rgba(26,26,26,0.75);
+  --glass-border:rgba(255,255,255,0.08);
+}
+
+.theme-sushi{
+  --bg:#070F0A;
+  --surface:#0F1A12;
+  --card:rgba(21,32,24,0.85);
+  --border:#243828;
+  --border-soft:rgba(255,255,255,0.04);
+  --accent:#2D9E6B;
+  --accent-glow:rgba(45,158,107,0.15);
+  --accent-bright:#3FBF85;
+  --cat:#E8F5EE;
+  --item-name:#E8F5EE;
+  --item-desc:#A8C4A6;
+  --item-price:#F0C040;
+  --glass-bg:rgba(21,32,24,0.75);
+  --glass-border:rgba(255,255,255,0.06);
+}
+
+/* ============================================
+   PREMIUM AMBIENT BACKGROUND LAYERS
+   ============================================ */
+
+.screen-wrap{
+  width:100%;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  background:var(--bg);
+  overflow:hidden;
+  position:relative;
+  animation:fadeIn 1.2s ease-out;
+}
+
+@keyframes fadeIn{
+  from{opacity:0}
+  to{opacity:1}
+}
+
+/* Soft Center Glow - Creates depth without vignette */
+.screen-wrap::before{
+  content:'';
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  width:120%;
+  height:120%;
+  background:radial-gradient(
+    ellipse at center,
+    var(--accent-glow) 0%,
+    transparent 60%
+  );
+  opacity:0.4;
+  pointer-events:none;
+  z-index:0;
+  animation:centerGlowPulse 12s ease-in-out infinite;
+}
+
+@keyframes centerGlowPulse{
+  0%,100%{opacity:0.3;transform:translate(-50%, -50%) scale(1)}
+  50%{opacity:0.5;transform:translate(-50%, -50%) scale(1.05)}
+}
+
+/* ============================================
+   PREMIUM HEADER WITH CROWN LOGO
+   ============================================ */
+
+.screen-header{
+  height:80px;
+  min-height:80px;
+  max-height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 32px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+  position:relative;
+  z-index:100;
+}
+
+.screen-header::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent) 50%,
+    transparent 100%
+  );
+  opacity:0.5;
+  animation:headerGlow 8s ease-in-out infinite;
+}
+
+@keyframes headerGlow{
+  0%,100%{opacity:0.3}
+  50%{opacity:0.6}
+}
+
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.header-crown{
+  width:42px;
+  height:42px;
+  color:var(--accent);
+  opacity:0.95;
+  animation:crownGlow 6s ease-in-out infinite;
+}
+
+@keyframes crownGlow{
+  0%,100%{opacity:0.9;filter:drop-shadow(0 0 8px var(--accent-glow))}
+  50%{opacity:1;filter:drop-shadow(0 0 12px var(--accent-glow))}
+}
+
+.header-wordmark{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.header-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  color:var(--cat);
+  letter-spacing:6px;
+  line-height:1;
+  text-transform:uppercase;
+  text-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+
+.header-subtitle{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:300;
+  font-size:11px;
+  color:var(--border);
+  letter-spacing:4px;
+  text-transform:uppercase;
+  opacity:0.7;
+}
+
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.header-screen-id{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;
+  font-size:9px;
+  color:var(--border);
+  text-transform:uppercase;
+  letter-spacing:2.5px;
+  opacity:0.6;
+}
+
+.live-pill{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border);
+  border-radius:16px;
+}
+
+.pulse-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--accent);
+  animation:livePulse 2s ease-in-out infinite;
+  box-shadow:0 0 8px var(--accent);
+}
+
+@keyframes livePulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:0.5;transform:scale(0.9)}
+}
+
+.live-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;
+  font-size:9px;
+  color:var(--border);
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+/* ============================================
+   PREMIUM GLASS PANELS
+   ============================================ */
+
+.screen-body{
+  flex:1;
+  display:grid;
+  gap:12px;
+  padding:12px;
+  background:transparent;
+  overflow:hidden;
+  min-height:0;
+  position:relative;
+  z-index:1;
+}
+
+.panel{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  position:relative;
+  min-height:0;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  animation:panelFadeIn 0.8s ease-out, panelGlow 16s ease-in-out infinite;
+}
+
+@keyframes panelFadeIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes panelGlow{
+  0%,100%{
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.05),
+      inset 0 0 20px var(--accent-glow);
+  }
+  50%{
+    box-shadow:
+      0 8px 32px rgba(0,0,0,0.4),
+      inset 0 1px 0 rgba(255,255,255,0.08),
+      inset 0 0 30px var(--accent-glow);
+  }
+}
+
+.panel::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:60px;
+  background:linear-gradient(
+    to bottom,
+    var(--accent-glow) 0%,
+    transparent 100%
+  );
+  pointer-events:none;
+  z-index:1;
+  opacity:0.6;
+}
+
+.panel-header{
+  padding:0 0 12px;
+  flex-shrink:0;
+  position:relative;
+  z-index:2;
+  border-bottom:1px solid var(--border-soft);
+}
+
+.panel-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;
+  color:var(--cat);
+  letter-spacing:3px;
+  line-height:1;
+  text-transform:uppercase;
+  text-shadow:0 2px 12px rgba(0,0,0,0.4);
+  animation:titleShimmer 8s ease-in-out infinite;
+}
+
+@keyframes titleShimmer{
+  0%,100%{opacity:0.95}
+  50%{opacity:1;text-shadow:0 2px 16px var(--accent-glow)}
+}
+
+.panel-subtitle{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:500;
+  font-size:12px;
+  color:var(--border);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-top:4px;
+  opacity:0.7;
+}
+
+.panel-items{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+  padding:12px 0 0;
+  min-height:0;
+}
+
+.panel-items::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  height:24px;
+  background:linear-gradient(to top, var(--glass-bg), transparent);
+  z-index:3;
+  pointer-events:none;
+}
+
+/* ============================================
+   MENU ITEMS WITH MICRO-ANIMATIONS
+   ============================================ */
+
+.items-page{
+  display:flex;
+  flex-direction:column;
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  opacity:0;
+  transform:translateY(8px);
+  transition:opacity 0.8s ease, transform 0.8s ease;
+  pointer-events:none;
+}
+
+.items-page.active{
+  opacity:1;
+  transform:translateY(0);
+  position:relative;
+  pointer-events:auto;
+}
+
+.items-page.fade-out{
+  opacity:0;
+  transform:translateY(-8px);
+  position:absolute;
+}
+
+.menu-item{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  padding:8px 0;
+  border-bottom:1px solid var(--border-soft);
+  position:relative;
+}
+
+.menu-item:last-child{
+  border-bottom:none;
+}
+
+.menu-item::before{
+  content:'';
+  position:absolute;
+  left:-24px;
+  top:0;
+  bottom:0;
+  width:2px;
+  background:var(--accent);
+  opacity:0;
+  transition:opacity 0.3s ease;
+}
+
+.mi-info{
+  flex:1;
+  min-width:0;
+}
+
+.mi-name{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;
+  font-size:28px;
+  color:var(--item-name);
+  letter-spacing:0.5px;
+  line-height:1.2;
+}
+
+.mi-price{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;
+  color:var(--item-price);
+  letter-spacing:1px;
+  flex-shrink:0;
+  text-align:right;
+  white-space:nowrap;
+  line-height:1;
+  text-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+
+.mi-price.rotating{
+  transition:opacity 0.4s ease;
+}
+
+.mi-price.price-fade-out{opacity:0}
+.mi-price.price-fade-in{opacity:1}
+
+/* ============================================
+   PAGINATION DOTS
+   ============================================ */
+
+.pagination-dots{
+  display:flex;
+  justify-content:center;
+  gap:6px;
+  padding:8px 0 0;
+  flex-shrink:0;
+  z-index:4;
+  position:relative;
+}
+
+.pagination-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--border);
+  transition:all 0.4s ease;
+  opacity:0.5;
+}
+
+.pagination-dot.active{
+  background:var(--accent);
+  opacity:1;
+  box-shadow:0 0 8px var(--accent-glow);
+  transform:scale(1.2);
+}
+
+/* ============================================
+   LAYOUTS
+   ============================================ */
+
+.layout-main1{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr}
+.layout-main2{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr}
+.layout-main3{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr}
+.layout-sushi1{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr}
+.layout-sushi2{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr}
+
+.col1-stack{
+  display:grid;
+  grid-template-rows:1fr auto;
+  gap:12px;
+  height:100%;
+  min-height:0;
+}
+
+.col3-stack{
+  display:grid;
+  grid-template-rows:60fr 40fr;
+  gap:12px;
+  height:100%;
+  min-height:0;
+}
+
+/* ============================================
+   BRAND STRIP
+   ============================================ */
+
+.kod-brand-strip{
+  background:var(--glass-bg);
+  border:1px solid var(--glass-border);
+  border-radius:16px;
+  padding:24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  position:relative;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  animation:panelGlow 16s ease-in-out infinite;
+}
+
+.kod-brand-strip::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:60px;
+  background:linear-gradient(to bottom, var(--accent-glow), transparent);
+  pointer-events:none;
+  opacity:0.6;
+}
+
+.kod-brand-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:38px;
+  color:var(--cat);
+  letter-spacing:6px;
+  line-height:1;
+  text-shadow:0 2px 12px rgba(0,0,0,0.4);
+}
+
+.kod-brand-bar{
+  width:48px;
+  height:2px;
+  background:var(--accent);
+  margin:8px 0;
+  box-shadow:0 0 8px var(--accent-glow);
+}
+
+.kod-brand-est{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:11px;
+  color:var(--accent);
+  letter-spacing:4px;
+  opacity:0.9;
+}
+
+/* ============================================
+   PREMIUM FOOTER
+   ============================================ */
+
+.screen-footer{
+  height:36px;
+  min-height:36px;
+  max-height:36px;
+  display:flex;
+  align-items:center;
+  padding:0 32px;
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+  overflow:hidden;
+  position:relative;
+  z-index:100;
+}
+
+.screen-footer::before{
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:1px;
+  background:linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--accent) 50%,
+    transparent 100%
+  );
+  opacity:0.3;
+}
+
+.footer-clock{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:600;
+  font-size:11px;
+  color:var(--border);
+  white-space:nowrap;
+  min-width:100px;
+  opacity:0.7;
+}
+
+.footer-ticker-wrap{
+  flex:1;
+  overflow:hidden;
+  position:relative;
+  margin:0 20px;
+  mask-image:linear-gradient(
+    to right,
+    transparent,
+    black 60px,
+    black calc(100% - 60px),
+    transparent
+  );
+}
+
+.footer-ticker{
+  display:inline-block;
+  white-space:nowrap;
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:400;
+  font-size:10px;
+  color:var(--border);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  animation:tickerScroll 36s linear infinite;
+  opacity:0.6;
+}
+
+@keyframes tickerScroll{
+  0%{transform:translateX(100%)}
+  100%{transform:translateX(-100%)}
+}
+
+.footer-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;
+  color:var(--border);
+  letter-spacing:4px;
+  white-space:nowrap;
+  opacity:0.6;
+}
+
+/* ============================================
+   EMBER PARTICLE SYSTEM
+   ============================================ */
+
+.ember-layer{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  z-index:5;
+  overflow:hidden;
+}
+
+.ember{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:var(--accent);
+  border-radius:50%;
+  opacity:0;
+  box-shadow:0 0 6px var(--accent-glow);
+  animation:emberRise 12s ease-in infinite;
+}
+
+.ember:nth-child(1){left:15%;animation-delay:0s;animation-duration:14s}
+.ember:nth-child(2){left:25%;animation-delay:2s;animation-duration:16s}
+.ember:nth-child(3){left:35%;animation-delay:4s;animation-duration:13s}
+.ember:nth-child(4){left:45%;animation-delay:1s;animation-duration:15s}
+.ember:nth-child(5){left:55%;animation-delay:3s;animation-duration:17s}
+.ember:nth-child(6){left:65%;animation-delay:5s;animation-duration:14s}
+.ember:nth-child(7){left:75%;animation-delay:2.5s;animation-duration:16s}
+.ember:nth-child(8){left:85%;animation-delay:4.5s;animation-duration:15s}
+
+@keyframes emberRise{
+  0%{
+    bottom:-10px;
+    opacity:0;
+    transform:translateX(0) scale(0.8);
+  }
+  10%{
+    opacity:0.6;
+  }
+  50%{
+    opacity:0.4;
+  }
+  90%{
+    opacity:0.1;
+  }
+  100%{
+    bottom:100vh;
+    opacity:0;
+    transform:translateX(40px) scale(1.2);
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.frozen-badge{
+  position:fixed;
+  top:12px;
+  right:12px;
+  background:var(--accent);
+  color:#fff;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;
+  letter-spacing:2px;
+  padding:6px 14px;
+  border-radius:6px;
+  z-index:9999;
+  display:none;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4);
+}
+
+.frozen-badge.visible{display:block}
+
+.fullscreen-overlay{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:#000;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:99999;
+  cursor:pointer;
+}
+
+.fullscreen-overlay.hidden{display:none}
+
+.fullscreen-overlay .overlay-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:56px;
+  color:var(--cat);
+  letter-spacing:8px;
+  text-shadow:0 4px 16px var(--accent-glow);
+}
+
+.fullscreen-overlay .overlay-text{
+  font-family:'Barlow Condensed',sans-serif;
+  font-weight:400;
+  font-size:13px;
+  color:var(--border);
+  margin-top:20px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  opacity:0.7;
+}
+
+.loading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  height:100%;
+  gap:16px;
+}
+
+.loading p{
+  font-family:'Barlow Condensed',sans-serif;
+  font-size:13px;
+  color:var(--item-desc);
+  letter-spacing:2px;
+  text-transform:uppercase;
+  opacity:0.7;
+}
+
+.spinner{
+  width:36px;
+  height:36px;
+  border:2px solid var(--border);
+  border-top-color:var(--accent);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  to{transform:rotate(360deg)}
+}
+
+.kiosk-mode{cursor:none!important}
+.kiosk-mode *{cursor:none!important}
+
+/* ============================================
+   RESPONSIVE OPTIMIZATIONS FOR TV DISPLAYS
+   ============================================ */
+
+@media (min-width: 1920px){
+  .header-logo{font-size:36px}
+  .panel-title{font-size:40px}
+  .mi-name{font-size:30px}
+  .mi-price{font-size:36px}
+}
+
+@media (min-width: 3840px){
+  .header-logo{font-size:42px}
+  .panel-title{font-size:48px}
+  .mi-name{font-size:36px}
+  .mi-price{font-size:42px}
+  .screen-header{height:100px;min-height:100px;max-height:100px}
+  .screen-footer{height:44px;min-height:44px;max-height:44px}
+}

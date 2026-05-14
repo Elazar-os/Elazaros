@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Menu Display - King of Delancey</title>
+  <link rel="stylesheet" href="/styles.css?v=v44">
+  <style>
+    /* Ambient background glow - Main screens only */
+    body.theme-main #kod-bg-ambient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(174, 49, 54, 0.25),
+        rgba(0, 0, 0, 0) 50%
+      );
+      animation: kodGlowPulse 6s ease-in-out infinite alternate;
+      filter: blur(80px);
+    }
+    body.theme-sushi #kod-bg-ambient {
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(45, 158, 107, 0.20),
+        rgba(0, 0, 0, 0) 50%
+      );
+      animation: kodGlowPulse 6s ease-in-out infinite alternate;
+      filter: blur(80px);
+    }
+    @keyframes kodGlowPulse {
+      0% {
+        opacity: 0.7;
+        transform: scale(0.95);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+  </style>
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+
+  <div id="kod-bg-ambient"></div>
+
+  <div class="screen-wrap" id="screen-wrap">
+    <header class="screen-header">
+      <div class="header-left">
+        <span class="header-logo" id="header-logo">King of Delancey</span>
+        <span class="header-pipe" id="header-pipe">|</span>
+        <span class="header-subtitle" id="header-subtitle">Est. 2009</span>
+      </div>
+      <div class="header-right">
+        <span class="header-screen-id" id="header-screen-id"></span>
+        <div class="live-pill">
+          <span class="pulse-dot" id="pulse-dot"></span>
+          <span class="live-text">LIVE</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="screen-body" id="screen-body">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading menu...</p>
+      </div>
+    </main>
+
+    <footer class="screen-footer">
+      <span class="footer-clock" id="footer-clock"></span>
+      <div class="footer-ticker-wrap" id="footer-ticker-wrap">
+        <span class="footer-ticker" id="footer-ticker"></span>
+      </div>
+      <span class="footer-brand" id="footer-brand">KING OF DELANCEY</span>
+    </footer>
+  </div>
+
+  <div class="frozen-badge" id="frozen-badge">FROZEN</div>
+
+  <div class="fullscreen-overlay" id="fullscreen-overlay">
+    <div class="overlay-logo">KING OF DELANCEY</div>
+    <div class="overlay-text">Tap anywhere to continue</div>
+  </div>
+
+  <script src="/app.js?v=v44"></script>
+</body>
+</html>

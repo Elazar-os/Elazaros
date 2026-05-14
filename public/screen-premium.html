@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,minimum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>King of Delancey - Premium Digital Menu</title>
+  <link rel="stylesheet" href="/styles-premium.css?v=v45">
+</head>
+<body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
+
+  <!-- Ember Particle Layer -->
+  <div class="ember-layer" id="ember-layer">
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+    <div class="ember"></div>
+  </div>
+
+  <div class="screen-wrap" id="screen-wrap">
+    <!-- Premium Header with Crown Logo -->
+    <header class="screen-header">
+      <div class="header-left">
+        <svg class="header-crown" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g id="crown">
+            <path d="M8 38 L40 38 L38 42 L10 42 Z" fill="currentColor" opacity="0.9"/>
+            <path d="M10 28 L14 38 L34 38 L38 28 Z" fill="currentColor" opacity="0.95"/>
+            <path d="M12 28 L10 18 L16 24 Z" fill="currentColor"/>
+            <path d="M20 24 L24 8 L28 24 Z" fill="currentColor"/>
+            <path d="M32 24 L38 18 L36 28 Z" fill="currentColor"/>
+            <circle cx="24" cy="14" r="2" fill="currentColor" opacity="0.6"/>
+            <circle cx="14" cy="22" r="1.5" fill="currentColor" opacity="0.5"/>
+            <circle cx="34" cy="22" r="1.5" fill="currentColor" opacity="0.5"/>
+          </g>
+        </svg>
+        <div class="header-wordmark">
+          <span class="header-logo" id="header-logo">KING OF DELANCEY</span>
+          <span class="header-subtitle" id="header-subtitle">EST. 2009</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="header-screen-id" id="header-screen-id"></span>
+        <div class="live-pill">
+          <span class="pulse-dot" id="pulse-dot"></span>
+          <span class="live-text">LIVE</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="screen-body" id="screen-body">
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading menu...</p>
+      </div>
+    </main>
+
+    <!-- Premium Footer -->
+    <footer class="screen-footer">
+      <span class="footer-clock" id="footer-clock"></span>
+      <div class="footer-ticker-wrap" id="footer-ticker-wrap">
+        <span class="footer-ticker" id="footer-ticker"></span>
+      </div>
+      <span class="footer-brand" id="footer-brand">KING OF DELANCEY</span>
+    </footer>
+  </div>
+
+  <!-- Status Badge -->
+  <div class="frozen-badge" id="frozen-badge">FROZEN</div>
+
+  <!-- Fullscreen Overlay -->
+  <div class="fullscreen-overlay" id="fullscreen-overlay">
+    <div class="overlay-logo">KING OF DELANCEY</div>
+    <div class="overlay-text">Tap anywhere to continue</div>
+  </div>
+
+  <script src="/app.js?v=v45"></script>
+</body>
+</html>

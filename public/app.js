@@ -615,6 +615,10 @@ function addFlameAndSmoke() {
   wrapsPanel.style.position = 'relative';
   wrapsPanel.appendChild(layer);
 
+  if (!campfireEnabled) {
+    layer.style.display = 'none';
+  }
+
   var ctx = canvas.getContext('2d');
   var W = canvas.width;
   var H = canvas.height;
@@ -701,6 +705,10 @@ function addFlameAndSmoke() {
   }
 
   function loop() {
+    if (!campfireEnabled) {
+      ctx.clearRect(0, 0, W, H);
+      return;
+    }
     ctx.clearRect(0, 0, W, H);
     drawGlow();
     drawLogs();
@@ -708,6 +716,13 @@ function addFlameAndSmoke() {
     requestAnimationFrame(loop);
   }
   loop();
+}
+
+function toggleCampfire(enabled) {
+  var layer = document.getElementById('flame-smoke-layer');
+  if (layer) {
+    layer.style.display = enabled ? 'block' : 'none';
+  }
 }
 
 function enterFullscreen() {
