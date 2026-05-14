@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v25_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v26_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 // Auto-clear old cache versions
@@ -337,6 +337,8 @@ function setupPagination(container, totalPages, panelIndex, headerEl) {
 
   function doTransition() {
     if (frozen || isTransitioning) return;
+    if (!panel) panel = container.parentElement;
+    if (!panel) return;
     var pages = container.querySelectorAll('.items-page');
     if (pages.length <= 1) return;
 
