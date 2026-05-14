@@ -128,6 +128,7 @@ async function pollScreenState() {
 
     if (campfireChanged) {
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
+      console.log('Campfire state changed to:', campfireEnabled);
       toggleCampfire(campfireEnabled);
     }
 
@@ -719,9 +720,14 @@ function addFlameAndSmoke() {
 }
 
 function toggleCampfire(enabled) {
+  console.log('toggleCampfire called with:', enabled);
+  campfireEnabled = enabled;
   var layer = document.getElementById('flame-smoke-layer');
   if (layer) {
     layer.style.display = enabled ? 'block' : 'none';
+    console.log('Campfire layer display set to:', layer.style.display);
+  } else {
+    console.log('Campfire layer not found');
   }
 }
 
