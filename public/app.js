@@ -9,7 +9,7 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v27_' + ST + '_' + SN;
+var CACHE_KEY = 'kod_menu_v28_' + ST + '_' + SN;
 var CACHE_MAX_AGE = 86400000;
 
 // Auto-clear old cache versions
