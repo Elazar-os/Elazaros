@@ -10,20 +10,6 @@ var params = (function(){
 var ST = params.screenType;
 var SN = params.screenNumber;
 
-// Cache disabled - always fetch fresh data for immediate updates
-var CACHE_DISABLED = true;
-
-// Force clear ALL old cache on load - v29
-(function() {
-  try {
-    console.log('[CACHE] Force clearing all localStorage...');
-    localStorage.clear();
-    console.log('[CACHE] All cache cleared');
-  } catch(e) {
-    console.error('[CACHE] Failed to clear:', e);
-  }
-})();
-
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
 
 if (ST === 'sushi') {
@@ -61,51 +47,17 @@ function updateClock() {
 updateClock();
 setInterval(updateClock, 1000);
 
-function getCachedMenu(ignoreAge) {
-  // Cache disabled for immediate updates
-  return null;
-}
-
-function cacheMenu(data) {
-  // Cache disabled for immediate updates
-  return;
-}
-
-function showCachedIndicator(show) {
-  var brand = document.getElementById('footer-brand');
-  if (brand) brand.textContent = show ? 'Cached' : 'KING OF DELANCEY';
-}
-
 function toggleCampfire(enabled) {
-  console.log('[CAMPFIRE] toggleCampfire called with:', enabled);
   campfireEnabled = enabled;
   var layer = document.getElementById('flame-smoke-layer');
-  if (layer) {
-    layer.style.display = enabled ? 'block' : 'none';
-    console.log('[CAMPFIRE] Layer display set to:', layer.style.display);
-    var brand = document.getElementById('footer-brand');
-    if (brand) {
-      brand.textContent = enabled ? 'CAMPFIRE ON' : 'CAMPFIRE OFF';
-      console.log('[CAMPFIRE] Footer updated to:', brand.textContent);
-    }
-    setTimeout(function() {
-      if (brand) brand.textContent = 'KING OF DELANCEY';
-    }, 3000);
-  } else {
-    console.log('[CAMPFIRE] ERROR: Layer not found!');
-  }
+  if (layer) layer.style.display = enabled ? 'block' : 'none';
 }
 
 async function pollScreenState() {
   try {
-    console.log('[POLL] Fetching screen state...');
     var r = await fetchWithTimeout('/api/screen-state', 5000);
-    if (!r.ok) {
-      console.log('[POLL] Response not OK:', r.status);
-      return;
-    }
+    if (!r.ok) return;
     var state = await r.json();
-    console.log('[POLL] Received state:', state);
 
     if (pollLastVersion === null) {
       pollLastVersion = state.version;
@@ -117,9 +69,7 @@ async function pollScreenState() {
         frozen = true;
         document.getElementById('frozen-badge').classList.add('visible');
       }
-      if (state.featured) { showFeaturedItem(state.featured); }
-      var dot = document.getElementById('pulse-dot');
-      if (dot) dot.style.background = 'var(--accent)';
+      if (state.featured) showFeaturedItem(state.featured);
       return;
     }
 
@@ -137,27 +87,25 @@ async function pollScreenState() {
     if (frozenChanged) {
       frozen = state.frozen;
       var badge = document.getElementById('frozen-badge');
-      if (state.frozen) { badge.classList.add('visible'); }
-      else { badge.classList.remove('visible'); }
+      if (state.frozen) badge.classList.add('visible');
+      else badge.classList.remove('visible');
     }
 
     if (featuredChanged) {
-      if (state.featured) { showFeaturedItem(state.featured); }
-      else { clearFeaturedItem(); }
+      if (state.featured) showFeaturedItem(state.featured);
+      else clearFeaturedItem();
     }
 
     if (campfireChanged) {
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
-      console.log('[POLL] Campfire state changed to:', campfireEnabled);
       toggleCampfire(campfireEnabled);
     }
 
     if (versionChanged) {
-      console.log('[POLL] Version changed - fetching fresh menu...');
       var items = await fetchMenu();
       if (items.length > 0) renderScreen(items);
     }
-  } catch (e) { console.error('Poll error:', e); }
+  } catch (e) {}
 }
 
 function startPolling() {
@@ -172,24 +120,13 @@ function fetchWithTimeout(url, ms) {
 }
 
 async function fetchMenu() {
-  var freshCache = getCachedMenu(false);
-  if (freshCache) {
-    showCachedIndicator(false);
-    return freshCache;
-  }
-
   try {
     var r = await fetchWithTimeout('/menu-' + ST + '-' + SN + '.json', 5000);
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var j = await r.json();
     if (!j.success) throw new Error(j.error || 'API error');
-    cacheMenu(j.data);
-    showCachedIndicator(false);
     return j.data;
   } catch (e) {
-    console.error('Fetch error:', e);
-    var cached = getCachedMenu(true);
-    if (cached) { showCachedIndicator(true); return cached; }
     return [];
   }
 }
@@ -792,25 +729,9 @@ document.addEventListener('keydown', function(e) {
 });
 
 async function init() {
-  console.log('[INIT] Starting app initialization...');
-  console.log('[INIT] Screen:', ST, 'Number:', SN);
-  console.log('[INIT] Cache disabled - always fetching fresh data');
-  console.log('[INIT] Version: v32 - Auto refresh without reload');
-  
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('/sw.js').then(function() {
-      console.log('[INIT] Service worker registered');
-    }).catch(function(err) {
-      console.log('[INIT] Service worker registration failed:', err);
-    });
-  }
-
   startPolling();
-
   var items = await fetchMenu();
-  if (items.length > 0) {
-    renderScreen(items);
-  }
+  if (items.length > 0) renderScreen(items);
 }
 
 init();
