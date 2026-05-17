@@ -9,16 +9,18 @@ var params = (function(){
 
 var ST = params.screenType;
 var SN = params.screenNumber;
-var CACHE_KEY = 'kod_menu_v28_' + ST + '_' + SN;
-var CACHE_MAX_AGE = 86400000;
 
-// Auto-clear old cache versions
+// Cache disabled - always fetch fresh data for immediate updates
+var CACHE_DISABLED = true;
+
+// Clear all old cache versions on load
 (function() {
   try {
     var keys = Object.keys(localStorage);
     keys.forEach(function(key) {
-      if (key.startsWith('kod_menu_v') && key !== CACHE_KEY) {
+      if (key.startsWith('kod_menu_v')) {
         localStorage.removeItem(key);
+        console.log('[CACHE] Cleared old cache:', key);
       }
     });
   } catch(e) {}
@@ -62,18 +64,13 @@ updateClock();
 setInterval(updateClock, 1000);
 
 function getCachedMenu(ignoreAge) {
-  try {
-    var c = localStorage.getItem(CACHE_KEY);
-    if (c) {
-      var p = JSON.parse(c);
-      if (ignoreAge || Date.now() - p.timestamp < CACHE_MAX_AGE) return p.data;
-    }
-  } catch (e) {}
+  // Cache disabled for immediate updates
   return null;
 }
 
 function cacheMenu(data) {
-  try { localStorage.setItem(CACHE_KEY, JSON.stringify({ data: data, timestamp: Date.now() })); } catch (e) {}
+  // Cache disabled for immediate updates
+  return;
 }
 
 function showCachedIndicator(show) {
@@ -158,7 +155,7 @@ async function pollScreenState() {
     }
 
     if (versionChanged) {
-      try { localStorage.removeItem(CACHE_KEY); } catch(e) {}
+      // Cache disabled - just fetch and render
       var items = await fetchMenu();
       if (items.length > 0) renderScreen(items);
     }
@@ -797,18 +794,13 @@ document.addEventListener('keydown', function(e) {
 async function init() {
   console.log('[INIT] Starting app initialization...');
   console.log('[INIT] Screen:', ST, 'Number:', SN);
+  console.log('[INIT] Cache disabled - always fetching fresh data');
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(function() {
       console.log('[INIT] Service worker registered');
     }).catch(function(err) {
       console.log('[INIT] Service worker registration failed:', err);
     });
-  }
-
-  var cachedMenu = getCachedMenu(true);
-  if (cachedMenu && cachedMenu.length > 0) {
-    renderScreen(cachedMenu);
-    showCachedIndicator(true);
   }
 
   startPolling();
