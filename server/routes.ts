@@ -457,6 +457,7 @@ export async function registerRoutes(
       }
       const item = await storage.updateMenuItemEnabled(id, enabled);
       invalidateCache();
+      await generateStaticMenuJSON();
       bumpVersion();
       broadcast({ type: 'MENU_UPDATE' });
       res.json(item);
@@ -485,6 +486,8 @@ export async function registerRoutes(
         return res.status(400).json({ error: parsed.error.message });
       }
       const item = await storage.createMenuItem(parsed.data);
+      invalidateCache();
+      await generateStaticMenuJSON();
       bumpVersion();
       broadcast({ type: 'MENU_UPDATE' });
       res.status(201).json(item);
@@ -501,6 +504,8 @@ export async function registerRoutes(
         return res.status(400).json({ error: parsed.error.message });
       }
       const item = await storage.updateMenuItem(parsed.data);
+      invalidateCache();
+      await generateStaticMenuJSON();
       bumpVersion();
       broadcast({ type: 'MENU_UPDATE' });
       res.json(item);
@@ -517,6 +522,8 @@ export async function registerRoutes(
         return res.status(400).json({ error: 'enabled must be a boolean' });
       }
       const item = await storage.updateMenuItemEnabled(id, enabled);
+      invalidateCache();
+      await generateStaticMenuJSON();
       bumpVersion();
       broadcast({ type: 'MENU_UPDATE' });
       res.json(item);
@@ -529,6 +536,8 @@ export async function registerRoutes(
     try {
       const id = parseInt(req.params.id);
       await storage.deleteMenuItem(id);
+      invalidateCache();
+      await generateStaticMenuJSON();
       bumpVersion();
       broadcast({ type: 'MENU_UPDATE' });
       res.status(204).send();
@@ -846,6 +855,8 @@ export async function registerRoutes(
         
         const enabled = parsed.type === 'enable';
         await storage.updateMenuItemEnabled(match.item.id, enabled);
+        invalidateCache();
+        await generateStaticMenuJSON();
         bumpVersion();
         broadcast({ type: 'MENU_UPDATE' });
         
@@ -874,6 +885,8 @@ export async function registerRoutes(
         
         const priceValue = parsed.price.includes('.') ? parsed.price : `${parsed.price}.00`;
         await storage.updateMenuItem({ id: match.item.id, price: priceValue });
+        invalidateCache();
+        await generateStaticMenuJSON();
         bumpVersion();
         broadcast({ type: 'MENU_UPDATE' });
         
