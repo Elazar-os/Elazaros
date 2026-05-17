@@ -154,6 +154,9 @@ async function pollScreenState() {
 
     if (versionChanged) {
       console.log('[POLL] Version changed - reloading page...');
+      try {
+        sessionStorage.setItem('wasFullscreen', document.fullscreenElement ? 'true' : 'false');
+      } catch(e) {}
       window.location.reload();
     }
   } catch (e) { console.error('Poll error:', e); }
@@ -773,10 +776,19 @@ document.addEventListener('fullscreenchange', function() {
 document.addEventListener('mousemove', resetKioskTimeout);
 
 try {
-  document.documentElement.requestFullscreen().then(function() {
-    document.getElementById('fullscreen-overlay').classList.add('hidden');
-    enableKiosk();
-  }).catch(function() {});
+  var wasFullscreen = sessionStorage.getItem('wasFullscreen');
+  if (wasFullscreen === 'true') {
+    sessionStorage.removeItem('wasFullscreen');
+    document.documentElement.requestFullscreen().then(function() {
+      document.getElementById('fullscreen-overlay').classList.add('hidden');
+      enableKiosk();
+    }).catch(function() {});
+  } else {
+    document.documentElement.requestFullscreen().then(function() {
+      document.getElementById('fullscreen-overlay').classList.add('hidden');
+      enableKiosk();
+    }).catch(function() {});
+  }
 } catch (e) {}
 
 document.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
@@ -794,7 +806,7 @@ async function init() {
   console.log('[INIT] Starting app initialization...');
   console.log('[INIT] Screen:', ST, 'Number:', SN);
   console.log('[INIT] Cache disabled - always fetching fresh data');
-  console.log('[INIT] Version: v30 - Auto reload on version change');
+  console.log('[INIT] Version: v31 - Auto reload with fullscreen persist');
   
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(function() {
