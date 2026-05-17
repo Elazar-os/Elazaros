@@ -13,17 +13,15 @@ var SN = params.screenNumber;
 // Cache disabled - always fetch fresh data for immediate updates
 var CACHE_DISABLED = true;
 
-// Clear all old cache versions on load
+// Force clear ALL old cache on load - v29
 (function() {
   try {
-    var keys = Object.keys(localStorage);
-    keys.forEach(function(key) {
-      if (key.startsWith('kod_menu_v')) {
-        localStorage.removeItem(key);
-        console.log('[CACHE] Cleared old cache:', key);
-      }
-    });
-  } catch(e) {}
+    console.log('[CACHE] Force clearing all localStorage...');
+    localStorage.clear();
+    console.log('[CACHE] All cache cleared');
+  } catch(e) {
+    console.error('[CACHE] Failed to clear:', e);
+  }
 })();
 
 document.body.classList.add(ST === 'sushi' ? 'theme-sushi' : 'theme-main');
@@ -797,6 +795,8 @@ async function init() {
   console.log('[INIT] Starting app initialization...');
   console.log('[INIT] Screen:', ST, 'Number:', SN);
   console.log('[INIT] Cache disabled - always fetching fresh data');
+  console.log('[INIT] Version: v29 - Force refresh');
+  
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(function() {
       console.log('[INIT] Service worker registered');
