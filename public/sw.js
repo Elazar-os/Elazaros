@@ -1,13 +1,13 @@
-var CACHE_NAME = 'kod-screen-v31';
+var CACHE_NAME = 'kod-screen-v32';
 
 // Simplified service worker - no caching, just pass through
 self.addEventListener('install', function(e) {
-  console.log('[SW] Installing v31 - no cache mode');
+  console.log('[SW] Installing v32 - no cache mode');
   self.skipWaiting();
 });
 
 self.addEventListener('activate', function(e) {
-  console.log('[SW] Activating v31 - clearing all caches');
+  console.log('[SW] Activating v32 - clearing all caches');
   e.waitUntil(
     caches.keys().then(function(names) {
       console.log('[SW] Deleting all caches:', names);
