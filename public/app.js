@@ -197,8 +197,10 @@ async function fetchMenu() {
 }
 
 function groupByCategory(items) {
+  // Filter out disabled items before grouping
+  var enabledItems = items.filter(function(item) { return item.enabled !== false; });
   var groups = {}; var order = [];
-  items.forEach(function(item) {
+  enabledItems.forEach(function(item) {
     var cat = item.category || 'Other';
     if (!groups[cat]) { groups[cat] = []; order.push(cat); }
     groups[cat].push(item);

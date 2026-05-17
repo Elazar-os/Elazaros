@@ -758,7 +758,7 @@ export async function registerRoutes(
     ];
 
     for (const sc of screenConfigs) {
-      const data = (await storage.getMenuItemsByScreen(sc.type, sc.number)).filter(i => i.enabled);
+      const data = await storage.getMenuItemsByScreen(sc.type, sc.number);
       const formatted = data.map(item => {
         let price: string | number = item.price;
         if (!item.price.includes('/') && !item.price.includes('$')) {
