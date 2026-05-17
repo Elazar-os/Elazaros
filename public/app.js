@@ -153,9 +153,8 @@ async function pollScreenState() {
     }
 
     if (versionChanged) {
-      // Cache disabled - just fetch and render
-      var items = await fetchMenu();
-      if (items.length > 0) renderScreen(items);
+      console.log('[POLL] Version changed - reloading page...');
+      window.location.reload();
     }
   } catch (e) { console.error('Poll error:', e); }
 }
@@ -795,7 +794,7 @@ async function init() {
   console.log('[INIT] Starting app initialization...');
   console.log('[INIT] Screen:', ST, 'Number:', SN);
   console.log('[INIT] Cache disabled - always fetching fresh data');
-  console.log('[INIT] Version: v29 - Force refresh');
+  console.log('[INIT] Version: v30 - Auto reload on version change');
   
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(function() {
