@@ -167,6 +167,13 @@ export default function Dashboard() {
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ['menu-items'] });
         toast({ title: 'Re-enabled', description: `${name} is back on the menu.` });
+      },
+      onError: (error: any) => {
+        toast({ 
+          title: 'Error', 
+          description: error?.message || 'Failed to re-enable item', 
+          variant: 'destructive' 
+        });
       }
     });
   }
