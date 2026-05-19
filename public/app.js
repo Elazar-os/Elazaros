@@ -56,6 +56,7 @@ function toggleCampfire(enabled) {
 }
 
 function toggleClosingTime(enabled) {
+  if (ST !== 'main' || SN !== 2) return;
   closingTime = enabled;
   var audio = document.getElementById('closing-time-audio');
   if (audio) {
@@ -70,6 +71,7 @@ function toggleClosingTime(enabled) {
 }
 
 function updateClosingVolume(volume) {
+  if (ST !== 'main' || SN !== 2) return;
   closingVolume = volume !== undefined ? volume : 0.3;
   var audio = document.getElementById('closing-time-audio');
   if (audio) {

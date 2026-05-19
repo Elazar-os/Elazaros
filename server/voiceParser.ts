@@ -70,11 +70,12 @@ function extractCampfireAction(cmd: string): 'on' | 'off' {
 }
 
 function detectClosingIntent(cmd: string): boolean {
-  return /\b(close|closing|shut down|end of day)\b/i.test(cmd) && /\b(store|shop|restaurant|time)\b/i.test(cmd);
+  return (/\b(close|closing|shut down|end of day)\b/i.test(cmd) && /\b(store|shop|restaurant|time)\b/i.test(cmd)) ||
+         /\b(shut off|turn off|stop)\b/i.test(cmd) && /\b(music|song|audio)\b/i.test(cmd);
 }
 
 function extractClosingAction(cmd: string): 'on' | 'off' {
-  if (/\b(open|reopen|cancel|stop)\b/i.test(cmd)) return 'off';
+  if (/\b(open|reopen|cancel|stop|shut off|turn off)\b/i.test(cmd)) return 'off';
   return 'on';
 }
 
