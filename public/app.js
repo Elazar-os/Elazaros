@@ -34,6 +34,7 @@ var pollLastFrozen = null;
 var pollLastFeatured = null;
 var pollLastCampfire = null;
 var campfireEnabled = true;
+var closingTime = false;
 
 function updateClock() {
   var now = new Date();
@@ -53,6 +54,20 @@ function toggleCampfire(enabled) {
   if (layer) layer.style.display = enabled ? 'block' : 'none';
 }
 
+function toggleClosingTime(enabled) {
+  closingTime = enabled;
+  var audio = document.getElementById('closing-time-audio');
+  if (audio) {
+    if (enabled) {
+      audio.volume = 0.3;
+      audio.play().catch(function(e) {});
+    } else {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+  }
+}
+
 async function pollScreenState() {
   try {
     var r = await fetchWithTimeout('/api/screen-state', 5000);
@@ -65,6 +80,7 @@ async function pollScreenState() {
       pollLastFeatured = state.featured ? JSON.stringify(state.featured) : null;
       pollLastCampfire = state.campfireEnabled;
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
+      closingTime = state.closingTime || false;
       if (state.frozen) {
         frozen = true;
         document.getElementById('frozen-badge').classList.add('visible');
@@ -78,11 +94,13 @@ async function pollScreenState() {
     var featuredKey = state.featured ? JSON.stringify(state.featured) : null;
     var featuredChanged = featuredKey !== pollLastFeatured;
     var campfireChanged = state.campfireEnabled !== pollLastCampfire;
+    var closingChanged = state.closingTime !== closingTime;
 
     pollLastVersion = state.version;
     pollLastFrozen = state.frozen;
     pollLastFeatured = featuredKey;
     pollLastCampfire = state.campfireEnabled;
+    closingTime = state.closingTime || false;
 
     if (frozenChanged) {
       frozen = state.frozen;
@@ -99,6 +117,10 @@ async function pollScreenState() {
     if (campfireChanged) {
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
       toggleCampfire(campfireEnabled);
+    }
+
+    if (closingChanged) {
+      toggleClosingTime(state.closingTime);
     }
 
     if (versionChanged) {

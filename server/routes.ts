@@ -18,6 +18,7 @@ let screenVersion = Date.now();
 let screenFrozen = false;
 let screenFeatured: { name: string; description: string; price: string } | null = null;
 let campfireEnabled = true;
+let closingTime = false;
 
 function bumpVersion() {
   screenVersion = Date.now();
@@ -782,7 +783,7 @@ export async function registerRoutes(
   }
 
   app.get('/api/screen-state', (_req, res) => {
-    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled });
+    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled, closingTime });
   });
 
   app.post('/api/refresh-screens', async (_req, res) => {
@@ -909,6 +910,18 @@ export async function registerRoutes(
           action: 'campfire_toggled', 
           enabled: campfireEnabled,
           message: `Campfire turned ${campfireEnabled ? 'on' : 'off'}` 
+        });
+      }
+      
+      if (parsed.type === 'closing') {
+        closingTime = parsed.action === 'on';
+        bumpVersion();
+        broadcast({ type: 'CLOSING_TIME', enabled: closingTime });
+        return res.json({ 
+          success: true, 
+          action: 'closing_time', 
+          enabled: closingTime,
+          message: closingTime ? 'Closing time activated' : 'Closing time deactivated'
         });
       }
       

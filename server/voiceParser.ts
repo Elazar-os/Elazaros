@@ -6,6 +6,7 @@ export type VoiceIntent =
   | { type: 'enable'; itemName: string }
   | { type: 'price'; itemName: string; price: string }
   | { type: 'campfire'; action: 'on' | 'off' }
+  | { type: 'closing'; action: 'on' | 'off' }
   | { type: 'unknown'; raw: string };
 
 export function parseVoiceCommand(raw: string): VoiceIntent {
@@ -17,6 +18,10 @@ export function parseVoiceCommand(raw: string): VoiceIntent {
   
   if (detectCampfireIntent(command)) {
     return { type: 'campfire', action: extractCampfireAction(command) };
+  }
+  
+  if (detectClosingIntent(command)) {
+    return { type: 'closing', action: extractClosingAction(command) };
   }
   
   if (detect86Intent(command)) {
@@ -56,6 +61,15 @@ function detectCampfireIntent(cmd: string): boolean {
 
 function extractCampfireAction(cmd: string): 'on' | 'off' {
   if (/\b(off|stop|extinguish|turn off|shut|shut off)\b/i.test(cmd)) return 'off';
+  return 'on';
+}
+
+function detectClosingIntent(cmd: string): boolean {
+  return /\b(close|closing|shut down|end of day)\b/i.test(cmd) && /\b(store|shop|restaurant|time)\b/i.test(cmd);
+}
+
+function extractClosingAction(cmd: string): 'on' | 'off' {
+  if (/\b(open|reopen|cancel|stop)\b/i.test(cmd)) return 'off';
   return 'on';
 }
 
