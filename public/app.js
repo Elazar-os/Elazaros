@@ -35,6 +35,7 @@ var pollLastFeatured = null;
 var pollLastCampfire = null;
 var campfireEnabled = true;
 var closingTime = false;
+var closingVolume = 0.3;
 
 function updateClock() {
   var now = new Date();
@@ -59,12 +60,20 @@ function toggleClosingTime(enabled) {
   var audio = document.getElementById('closing-time-audio');
   if (audio) {
     if (enabled) {
-      audio.volume = 0.3;
+      audio.volume = closingVolume;
       audio.play().catch(function(e) {});
     } else {
       audio.pause();
       audio.currentTime = 0;
     }
+  }
+}
+
+function updateClosingVolume(volume) {
+  closingVolume = volume !== undefined ? volume : 0.3;
+  var audio = document.getElementById('closing-time-audio');
+  if (audio) {
+    audio.volume = closingVolume;
   }
 }
 
@@ -81,6 +90,7 @@ async function pollScreenState() {
       pollLastCampfire = state.campfireEnabled;
       campfireEnabled = state.campfireEnabled !== undefined ? state.campfireEnabled : true;
       closingTime = state.closingTime || false;
+      closingVolume = state.closingVolume !== undefined ? state.closingVolume : 0.3;
       if (state.frozen) {
         frozen = true;
         document.getElementById('frozen-badge').classList.add('visible');
@@ -95,12 +105,14 @@ async function pollScreenState() {
     var featuredChanged = featuredKey !== pollLastFeatured;
     var campfireChanged = state.campfireEnabled !== pollLastCampfire;
     var closingChanged = state.closingTime !== closingTime;
+    var volumeChanged = state.closingVolume !== closingVolume;
 
     pollLastVersion = state.version;
     pollLastFrozen = state.frozen;
     pollLastFeatured = featuredKey;
     pollLastCampfire = state.campfireEnabled;
     closingTime = state.closingTime || false;
+    closingVolume = state.closingVolume !== undefined ? state.closingVolume : 0.3;
 
     if (frozenChanged) {
       frozen = state.frozen;
@@ -121,6 +133,10 @@ async function pollScreenState() {
 
     if (closingChanged) {
       toggleClosingTime(state.closingTime);
+    }
+
+    if (volumeChanged) {
+      updateClosingVolume(state.closingVolume);
     }
 
     if (versionChanged) {

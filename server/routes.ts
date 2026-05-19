@@ -19,6 +19,7 @@ let screenFrozen = false;
 let screenFeatured: { name: string; description: string; price: string } | null = null;
 let campfireEnabled = true;
 let closingTime = false;
+let closingVolume = 0.3;
 
 function bumpVersion() {
   screenVersion = Date.now();
@@ -783,7 +784,7 @@ export async function registerRoutes(
   }
 
   app.get('/api/screen-state', (_req, res) => {
-    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled, closingTime });
+    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled, closingTime, closingVolume });
   });
 
   app.post('/api/refresh-screens', async (_req, res) => {
@@ -922,6 +923,19 @@ export async function registerRoutes(
           action: 'closing_time', 
           enabled: closingTime,
           message: closingTime ? 'Closing time activated' : 'Closing time deactivated'
+        });
+      }
+      
+      if (parsed.type === 'volume') {
+        const vol = Math.max(0, Math.min(1, parsed.volume / 100));
+        closingVolume = vol;
+        bumpVersion();
+        broadcast({ type: 'VOLUME_UPDATE', volume: closingVolume });
+        return res.json({ 
+          success: true, 
+          action: 'volume_changed', 
+          volume: Math.round(vol * 100),
+          message: `Volume set to ${Math.round(vol * 100)}%`
         });
       }
       

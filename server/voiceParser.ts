@@ -7,6 +7,7 @@ export type VoiceIntent =
   | { type: 'price'; itemName: string; price: string }
   | { type: 'campfire'; action: 'on' | 'off' }
   | { type: 'closing'; action: 'on' | 'off' }
+  | { type: 'volume'; volume: number }
   | { type: 'unknown'; raw: string };
 
 export function parseVoiceCommand(raw: string): VoiceIntent {
@@ -22,6 +23,10 @@ export function parseVoiceCommand(raw: string): VoiceIntent {
   
   if (detectClosingIntent(command)) {
     return { type: 'closing', action: extractClosingAction(command) };
+  }
+  
+  if (detectVolumeIntent(command)) {
+    return { type: 'volume', volume: extractVolume(command) };
   }
   
   if (detect86Intent(command)) {
@@ -71,6 +76,18 @@ function detectClosingIntent(cmd: string): boolean {
 function extractClosingAction(cmd: string): 'on' | 'off' {
   if (/\b(open|reopen|cancel|stop)\b/i.test(cmd)) return 'off';
   return 'on';
+}
+
+function detectVolumeIntent(cmd: string): boolean {
+  return /\b(volume|louder|quieter|sound)\b/i.test(cmd) && /\d+/i.test(cmd);
+}
+
+function extractVolume(cmd: string): number {
+  const match = cmd.match(/\b(\d+)\s*(?:%|percent)?\b/i);
+  if (match) {
+    return parseInt(match[1]);
+  }
+  return 50;
 }
 
 function detect86Intent(cmd: string): boolean {
