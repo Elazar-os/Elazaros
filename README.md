@@ -1,4 +1,4 @@
-# Elazaros
+ Elazaros
 
 Migration workspace for moving the existing Replit project to GitHub, Supabase, and Cloudflare with minimal risk and no app logic changes.
 
