@@ -1,6 +1,7 @@
 import { db } from "../db";
 import { menuItems, screens, appConfig, categories, managers, bossInviteCodes, type MenuItem, type InsertMenuItem, type UpdateMenuItem, type Screen, type InsertScreen, type UpdateScreen, type ConfigData, type Category, type InsertCategory, type UpdateCategory, type Manager, type InsertManager, type UpdateManager, type BossInviteCode } from "@shared/schema";
 import { eq, and, asc } from "drizzle-orm";
+import { hashSecret, verifySecret, isHashed } from "./security";
 
 interface CacheEntry<T> {
   data: T;
@@ -60,14 +61,19 @@ export interface IStorage {
   updateConfig(config: Partial<ConfigData>): Promise<ConfigData>;
 
   verifyManagerPin(pin: string): Promise<Manager | null>;
-  getAllManagers(): Promise<Manager[]>;
-  createManager(manager: InsertManager): Promise<Manager>;
-  updateManager(manager: UpdateManager): Promise<Manager>;
+  getAllManagers(): Promise<Omit<Manager, "pin">[]>;
+  createManager(manager: InsertManager): Promise<Omit<Manager, "pin">>;
+  updateManager(manager: UpdateManager): Promise<Omit<Manager, "pin">>;
   deleteManager(id: number): Promise<void>;
 
   getAllInviteCodes(): Promise<BossInviteCode[]>;
   createInviteCode(code: string): Promise<BossInviteCode>;
   useInviteCode(code: string, deviceId: string): Promise<BossInviteCode | null>;
+}
+
+function stripPin(manager: Manager): Omit<Manager, "pin"> {
+  const { pin: _pin, ...rest } = manager;
+  return rest;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -250,26 +256,47 @@ export class DatabaseStorage implements IStorage {
   }
 
   async verifyManagerPin(pin: string): Promise<Manager | null> {
-    const result = await db.select().from(managers).where(eq(managers.pin, pin));
-    return result[0] || null;
+    const all = await db.select().from(managers);
+    for (const manager of all) {
+      const ok = await verifySecret(pin, manager.pin);
+      if (!ok) continue;
+
+      // Upgrade legacy plaintext PIN to bcrypt on successful login
+      if (!isHashed(manager.pin)) {
+        const hashed = await hashSecret(pin);
+        await db.update(managers).set({ pin: hashed }).where(eq(managers.id, manager.id));
+        return { ...manager, pin: hashed };
+      }
+
+      return manager;
+    }
+    return null;
   }
 
-  async getAllManagers(): Promise<Manager[]> {
-    return db.select().from(managers);
+  async getAllManagers(): Promise<Omit<Manager, "pin">[]> {
+    const rows = await db.select().from(managers);
+    return rows.map(stripPin);
   }
 
-  async createManager(manager: InsertManager): Promise<Manager> {
-    const result = await db.insert(managers).values(manager).returning();
-    return result[0];
+  async createManager(manager: InsertManager): Promise<Omit<Manager, "pin">> {
+    const hashedPin = await hashSecret(manager.pin);
+    const result = await db
+      .insert(managers)
+      .values({ ...manager, pin: hashedPin })
+      .returning();
+    return stripPin(result[0]);
   }
 
-  async updateManager(manager: UpdateManager): Promise<Manager> {
+  async updateManager(manager: UpdateManager): Promise<Omit<Manager, "pin">> {
     const { id, ...updates } = manager;
+    if (updates.pin) {
+      updates.pin = await hashSecret(updates.pin);
+    }
     const result = await db.update(managers)
       .set(updates)
       .where(eq(managers.id, id))
       .returning();
-    return result[0];
+    return stripPin(result[0]);
   }
 
   async deleteManager(id: number): Promise<void> {
