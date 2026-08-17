@@ -61,7 +61,7 @@ function InviteCodeScreen({ onAuth }: { onAuth: () => void }) {
           value={code}
           onChange={e => setCode(e.target.value.toUpperCase())}
           placeholder="Enter invite code"
-          maxLength={8}
+          maxLength={20}
           className="w-full bg-[#1a1a1a] border border-[#333] rounded-lg px-4 py-3 text-white text-center text-lg tracking-[0.3em] font-mono placeholder-gray-600 focus:outline-none focus:border-[#E8102E]"
           autoFocus
           data-testid="input-invite-code"
