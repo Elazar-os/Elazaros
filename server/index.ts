@@ -30,17 +30,17 @@ let kidsMode = false;
 let anniversaryName: string | null = null;
 
 const mainTheme = {
-  version: "v52",
+  version: "v53",
   main: {
-    bg: "#1C1416",
-    surface: "#24181B",
-    card: "#2B1D21",
-    border: "#4A3036",
-    accent: "#D01230",
-    cat: "#F4C9CF",
-    itemName: "#F6EEEF",
-    itemDesc: "#C7B0B4",
-    itemPrice: "#E31B3A",
+    bg: "#3A2428",
+    surface: "#4A2D32",
+    card: "#4E3036",
+    border: "#7A4A52",
+    accent: "#FF2D42",
+    cat: "#FFFFFF",
+    itemName: "#FFFFFF",
+    itemDesc: "#E8D0D3",
+    itemPrice: "#FF3B4E",
   },
 };
 
