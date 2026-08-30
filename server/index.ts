@@ -38,6 +38,21 @@ app.post("/api/kids", (req, res) => {
   res.json({ success: true, kidsMode, message: kidsMode ? "Kids hour on" : "Kids hour off" });
 });
 
+app.post("/api/voice-command", (req, res, next) => {
+  const command = String(req.body?.command || "").toLowerCase();
+  if (!/\bkids?\s*(mode|hour|menu)\b/.test(command) && !/\bkid mode\b/.test(command)) {
+    return next();
+  }
+  const off = /\b(off|stop|end|cancel|clear|done)\b/.test(command);
+  kidsMode = !off;
+  return res.json({
+    success: true,
+    action: "kids_mode",
+    enabled: kidsMode,
+    message: kidsMode ? "Kids hour on" : "Kids hour off",
+  });
+});
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -67,7 +82,6 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-
       log(logLine);
     }
   });
@@ -78,22 +92,10 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
-  const originalJson = express.response.json;
-  app.use("/api/screen-state", (_req, res, next) => {
-    const send = res.json.bind(res);
-    res.json = function (body: any) {
-      if (body && typeof body === "object") body.kidsMode = kidsMode;
-      return send(body);
-    } as any;
-    next();
-  });
-
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
-
     console.error(`[Error] ${status}: ${message}`, err.stack || err);
-    
     if (!res.headersSent) {
       res.status(status).json({ message });
     }
