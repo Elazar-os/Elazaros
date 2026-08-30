@@ -104,7 +104,7 @@
 
   async function pollKids() {
     try {
-      var r = await fetch('/api/screen-state', { cache: 'no-store' });
+      var r = await fetch('/api/kids-state', { cache: 'no-store' });
       if (!r.ok) return;
       var state = await r.json();
       var next = !!state.kidsMode;
