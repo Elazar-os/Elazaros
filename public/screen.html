@@ -10,43 +10,10 @@
   <meta http-equiv="Expires" content="0">
   <title>Menu Display - King of Delancey</title>
   <link rel="manifest" href="/screen-manifest.json">
-  <link rel="stylesheet" href="/styles.css?v=v49">
-  <style>
-    body.theme-main #kod-bg-ambient {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: -1;
-      pointer-events: none;
-      background: radial-gradient(
-        circle at 50% 50%,
-        rgba(174, 49, 54, 0.25),
-        rgba(0, 0, 0, 0) 50%
-      );
-      animation: kodGlowPulse 6s ease-in-out infinite alternate;
-      filter: blur(80px);
-    }
-    body.theme-sushi #kod-bg-ambient {
-      background: radial-gradient(
-        circle at 50% 50%,
-        rgba(45, 158, 107, 0.20),
-        rgba(0, 0, 0, 0) 50%
-      );
-      animation: kodGlowPulse 6s ease-in-out infinite alternate;
-      filter: blur(80px);
-    }
-    @keyframes kodGlowPulse {
-      0% { opacity: 0.7; transform: scale(0.95); }
-      100% { opacity: 1; transform: scale(1.05); }
-    }
-  </style>
+  <link rel="stylesheet" href="/styles.css?v=v50">
 </head>
 <body oncontextmenu="return false;" ondragstart="return false;" onselectstart="return false;">
-
   <div id="kod-bg-ambient"></div>
-
   <div class="screen-wrap" id="screen-wrap">
     <header class="screen-header">
       <div class="header-left">
@@ -62,14 +29,12 @@
         </div>
       </div>
     </header>
-
     <main class="screen-body" id="screen-body">
       <div class="loading">
         <div class="spinner"></div>
         <p>Loading menu...</p>
       </div>
     </main>
-
     <footer class="screen-footer">
       <span class="footer-clock" id="footer-clock"></span>
       <div class="footer-ticker-wrap" id="footer-ticker-wrap">
@@ -78,22 +43,22 @@
       <span class="footer-brand" id="footer-brand">KING OF DELANCEY</span>
     </footer>
   </div>
-
   <div class="frozen-badge" id="frozen-badge">FROZEN</div>
-
   <audio id="closing-time-audio" loop>
     <source src="/closing-time.mp3" type="audio/mpeg">
   </audio>
   <audio id="birthday-audio">
     <source src="/birthday.mp3" type="audio/mpeg">
   </audio>
-
+  <audio id="kids-audio">
+    <source src="/kids.mp3" type="audio/mpeg">
+  </audio>
   <div class="fullscreen-overlay" id="fullscreen-overlay">
     <div class="overlay-logo">KING OF DELANCEY</div>
     <div class="overlay-text">Tap anywhere to continue</div>
   </div>
-
-  <script src="/birthday.js?v=v49"></script>
-  <script src="/app.js?v=v49"></script>
+  <script src="/birthday.js?v=v50"></script>
+  <script src="/kids.js?v=v50"></script>
+  <script src="/app.js?v=v50"></script>
 </body>
 </html>
