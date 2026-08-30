@@ -31,11 +31,11 @@
       'body.theme-main .panel,body.theme-main .kod-brand-strip{',
       'background:' + t.card + ';',
       'border:1px solid ' + t.border + ';',
-      'box-shadow:none;',
+      'box-shadow:0 2px 8px rgba(0,0,0,.06);',
       '}',
-      'body.theme-main .panel-title{color:' + t.cat + ';text-shadow:0 1px 2px rgba(0,0,0,.55);}',
-      'body.theme-main .mi-name{color:' + t.itemName + ';text-shadow:0 1px 2px rgba(0,0,0,.65);}',
-      'body.theme-main .mi-price{color:' + t.itemPrice + ';text-shadow:0 1px 2px rgba(0,0,0,.55);}',
+      'body.theme-main .panel-title{color:' + t.cat + ';text-shadow:none;}',
+      'body.theme-main .mi-name{color:' + t.itemName + ';text-shadow:none;}',
+      'body.theme-main .mi-price{color:' + t.itemPrice + ';text-shadow:none;}',
       'body.theme-main .header-logo,body.theme-main .kod-brand-logo,body.theme-main .footer-brand{color:' + t.accent + ';}',
       'body.theme-main #kod-bg-ambient{display:none;}'
     ].join('');
