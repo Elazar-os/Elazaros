@@ -26,6 +26,18 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
+let kidsMode = false;
+
+app.get("/api/kids-state", (_req, res) => {
+  res.json({ kidsMode });
+});
+
+app.post("/api/kids", (req, res) => {
+  const action = String(req.body?.action || "on");
+  kidsMode = action !== "off" && action !== "stop" && action !== "clear";
+  res.json({ success: true, kidsMode, message: kidsMode ? "Kids hour on" : "Kids hour off" });
+});
+
 export function log(message: string, source = "express") {
   const formattedTime = new Date().toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -66,6 +78,16 @@ app.use((req, res, next) => {
 (async () => {
   await registerRoutes(httpServer, app);
 
+  const originalJson = express.response.json;
+  app.use("/api/screen-state", (_req, res, next) => {
+    const send = res.json.bind(res);
+    res.json = function (body: any) {
+      if (body && typeof body === "object") body.kidsMode = kidsMode;
+      return send(body);
+    } as any;
+    next();
+  });
+
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -77,9 +99,6 @@ app.use((req, res, next) => {
     }
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (process.env.NODE_ENV === "production") {
     serveStatic(app);
   } else {
@@ -87,10 +106,6 @@ app.use((req, res, next) => {
     await setupVite(httpServer, app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen(
     {
