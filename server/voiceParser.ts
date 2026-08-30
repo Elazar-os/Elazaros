@@ -7,6 +7,7 @@ export type VoiceIntent =
   | { type: 'price'; itemName: string; price: string }
   | { type: 'campfire'; action: 'on' | 'off' }
   | { type: 'closing'; action: 'on' | 'off' }
+  | { type: 'birthday'; action: 'on' | 'off'; name: string }
   | { type: 'volume'; volume: number }
   | { type: 'unknown'; raw: string };
 
@@ -15,6 +16,10 @@ export function parseVoiceCommand(raw: string): VoiceIntent {
   
   if (detectThemeIntent(command)) {
     return { type: 'theme', theme: extractTheme(command) };
+  }
+
+  if (detectBirthdayIntent(command)) {
+    return { type: 'birthday', action: extractBirthdayAction(command), name: extractBirthdayName(command) };
   }
   
   if (detectCampfireIntent(command)) {
@@ -58,6 +63,27 @@ function extractTheme(cmd: string): string {
   if (/classic|delancey/i.test(cmd)) return 'delanceyClassic';
   if (/high\s*contrast|fast|yellow/i.test(cmd)) return 'highContrastFast';
   return 'delanceyClassic';
+}
+
+function detectBirthdayIntent(cmd: string): boolean {
+  return /\bbirthday\b/i.test(cmd);
+}
+
+function extractBirthdayAction(cmd: string): 'on' | 'off' {
+  if (/\b(stop|cancel|clear|end|off|done)\b/i.test(cmd)) return 'off';
+  return 'on';
+}
+
+function extractBirthdayName(cmd: string): string {
+  let name = cmd
+    .replace(/\b(hey gary|play|start|put on|put up|show|happy)\b/gi, '')
+    .replace(/\b(birthday|table|song|clip|music|audio)\b/gi, '')
+    .replace(/\b(for|to|the|please|can you|could you)\b/gi, '')
+    .replace(/\b(stop|cancel|clear|end|off|done)\b/gi, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!name) return 'Happy Birthday';
+  return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 }
 
 function detectCampfireIntent(cmd: string): boolean {
