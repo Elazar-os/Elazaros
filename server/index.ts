@@ -27,6 +27,28 @@ app.use(
 app.use(express.urlencoded({ extended: false }));
 
 let kidsMode = false;
+let anniversaryName: string | null = null;
+
+function titleCase(value: string) {
+  return value
+    .split(" ")
+    .filter(Boolean)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function extractAnniversaryName(command: string) {
+  const cleaned = command
+    .replace(/hey gary,?/gi, "")
+    .replace(/\b(play|start|show|put on|put up)\b/gi, "")
+    .replace(/\b(anniversary|anniversaries|table)\b/gi, "")
+    .replace(/\b(mazal|mazel)\s*tov\b/gi, "")
+    .replace(/\b(for|to|the|please|can you|could you)\b/gi, "")
+    .replace(/\b(stop|cancel|clear|end|off|done)\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return cleaned ? titleCase(cleaned) : "Mazal Tov";
+}
 
 app.get("/api/kids-state", (_req, res) => {
   res.json({ kidsMode });
@@ -38,8 +60,35 @@ app.post("/api/kids", (req, res) => {
   res.json({ success: true, kidsMode, message: kidsMode ? "Kids hour on" : "Kids hour off" });
 });
 
+app.get("/api/anniversary-state", (_req, res) => {
+  res.json({ name: anniversaryName });
+});
+
+app.post("/api/anniversary", (req, res) => {
+  const action = String(req.body?.action || "on");
+  if (action === "off" || action === "stop" || action === "clear") {
+    anniversaryName = null;
+    return res.json({ success: true, name: null, message: "Anniversary cleared" });
+  }
+  const name = String(req.body?.name || "").trim();
+  anniversaryName = name || "Mazal Tov";
+  res.json({ success: true, name: anniversaryName, message: `MAZAL TOV ${anniversaryName}` });
+});
+
 app.post("/api/voice-command", (req, res, next) => {
   const command = String(req.body?.command || "").toLowerCase();
+
+  if (/\b(anniversary|mazal\s*tov|mazel\s*tov)\b/.test(command)) {
+    const off = /\b(stop|cancel|clear|end|off|done)\b/.test(command);
+    if (off) {
+      anniversaryName = null;
+      return res.json({ success: true, action: "anniversary_clear", message: "Anniversary cleared" });
+    }
+    anniversaryName = extractAnniversaryName(command);
+    const label = anniversaryName === "Mazal Tov" ? "MAZAL TOV" : `MAZAL TOV ${anniversaryName}`;
+    return res.json({ success: true, action: "anniversary", name: anniversaryName, message: label });
+  }
+
   if (!/\bkids?\s*(mode|hour|menu)\b/.test(command) && !/\bkid mode\b/.test(command)) {
     return next();
   }
