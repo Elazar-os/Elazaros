@@ -30,17 +30,17 @@ body{
 *{scrollbar-width:none!important;-ms-overflow-style:none!important}
 
 .theme-main{
-  --bg:#F7F7F7;
-  --surface:#FFFFFF;
-  --card:#FFFFFF;
-  --border:#E8E8E8;
-  --border-soft:rgba(0,0,0,0.06);
-  --accent:#C8102E;
-  --accent-glow:rgba(200,16,46,0.08);
-  --cat:#C8102E;
-  --item-name:#111111;
-  --item-desc:#555555;
-  --item-price:#C8102E;
+  --bg:#1C1416;
+  --surface:#24181B;
+  --card:#2B1D21;
+  --border:#4A3036;
+  --border-soft:rgba(255,230,230,0.08);
+  --accent:#D01230;
+  --accent-glow:rgba(208,18,48,0.16);
+  --cat:#F2D3D8;
+  --item-name:#F6EEEF;
+  --item-desc:#C7B0B4;
+  --item-price:#E31B3A;
 }
 
 .theme-sushi{
@@ -64,6 +64,12 @@ body{
   overflow:hidden;
 }
 
+.theme-main .screen-wrap{
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(208,18,48,0.14), transparent 46%),
+    var(--bg);
+}
+
 .screen-header{
   height:68px;min-height:68px;max-height:68px;
   display:flex;align-items:center;justify-content:space-between;
@@ -80,7 +86,7 @@ body{
 .header-logo{
   font-family:'Bebas Neue',sans-serif;
   font-size:38px;
-  color:var(--cat);
+  color:var(--accent);
   letter-spacing:5px;
   line-height:1;
 }
@@ -97,7 +103,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:300;
   font-size:18px;
-  color:var(--border);
+  color:#8A6F74;
   letter-spacing:2px;
   text-transform:uppercase;
 }
@@ -110,7 +116,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:600;
   font-size:9px;
-  color:var(--border);
+  color:#8A6F74;
   text-transform:uppercase;
   letter-spacing:2.5px;
 }
@@ -133,7 +139,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:600;
   font-size:9px;
-  color:var(--border);
+  color:#8A6F74;
   letter-spacing:2px;
   text-transform:uppercase;
 }
@@ -148,7 +154,7 @@ body{
   display:grid;
   gap:8px;
   padding:8px;
-  background:var(--bg);
+  background:transparent;
   overflow:hidden;
   min-height:0;
 }
@@ -167,7 +173,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:600;
   font-size:11px;
-  color:var(--border);
+  color:#8A6F74;
   white-space:nowrap;
   min-width:90px;
 }
@@ -187,7 +193,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:400;
   font-size:10px;
-  color:var(--border);
+  color:#8A6F74;
   letter-spacing:2px;
   text-transform:uppercase;
   animation:ticker-scroll 32s linear infinite;
@@ -201,7 +207,7 @@ body{
 .footer-brand{
   font-family:'Bebas Neue',sans-serif;
   font-size:14px;
-  color:var(--border);
+  color:var(--accent);
   letter-spacing:4px;
   white-space:nowrap;
 }
@@ -215,21 +221,21 @@ body{
 .footer-cached{
   font-family:'Barlow Condensed',sans-serif;
   font-size:10px;
-  color:var(--border);
+  color:#8A6F74;
   letter-spacing:1px;
 }
 
 @keyframes panelGlow{
-  0%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 18px rgba(174,49,54,0.10)}
-  50%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 26px rgba(174,49,54,0.16)}
-  100%{box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 18px rgba(174,49,54,0.10)}
+  0%{box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(208,18,48,0.08)}
+  50%{box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(208,18,48,0.22)}
+  100%{box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(208,18,48,0.08)}
 }
 
 .panel{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
+  background:var(--card);
+  border:1px solid var(--border);
   border-radius:14px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 20px rgba(174,49,54,0.12);
+  box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(208,18,48,0.10);
   padding:20px;
   display:flex;flex-direction:column;
   overflow:hidden;
@@ -238,12 +244,18 @@ body{
   animation:panelGlow 14s ease-in-out infinite;
 }
 
+.theme-sushi .panel{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 20px rgba(45,158,107,0.12);
+}
+
 .panel::before{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
-  height:50px;
-  background:linear-gradient(to bottom,var(--accent-glow),transparent);
+  height:4px;
+  background:var(--accent);
   pointer-events:none;
   z-index:1;
 }
@@ -264,11 +276,15 @@ body{
   text-transform:uppercase;
 }
 
+.theme-main .panel-title{
+  color:#F4C9CF;
+}
+
 .panel-subtitle{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:600;
   font-size:14px;
-  color:var(--border);
+  color:#8A6F74;
   letter-spacing:2.5px;
   text-transform:uppercase;
   margin-top:2px;
@@ -278,7 +294,7 @@ body{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:300;
   font-size:13px;
-  color:var(--border);
+  color:#8A6F74;
   font-style:italic;
   margin-top:2px;
 }
@@ -418,10 +434,10 @@ body{
 .layout-sushi2{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}
 
 .kod-brand-strip{
-  background:rgba(255,255,255,0.04);
-  border:1px solid rgba(255,255,255,0.08);
+  background:var(--card);
+  border:1px solid var(--border);
   border-radius:14px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 20px rgba(174,49,54,0.12);
+  box-shadow:0 6px 18px rgba(0,0,0,0.28),inset 0 0 0 1px rgba(208,18,48,0.10);
   padding:20px;
   display:flex;
   flex-direction:column;
@@ -436,15 +452,15 @@ body{
   content:'';
   position:absolute;
   top:0;left:0;right:0;
-  height:50px;
-  background:linear-gradient(to bottom,var(--accent-glow),transparent);
+  height:4px;
+  background:var(--accent);
   pointer-events:none;
 }
 
 .kod-brand-logo{
   font-family:'Bebas Neue',sans-serif;
   font-size:42px;
-  color:var(--cat);
+  color:var(--accent);
   letter-spacing:6px;
   line-height:1;
 }
@@ -459,7 +475,7 @@ body{
 .kod-brand-est{
   font-family:'Bebas Neue',sans-serif;
   font-size:12px;
-  color:var(--accent);
+  color:#F4C9CF;
   letter-spacing:4px;
 }
 
@@ -477,7 +493,7 @@ body{
 
 .fullscreen-overlay{
   position:fixed;top:0;left:0;right:0;bottom:0;
-  background:#000;
+  background:#1C1416;
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
   z-index:99999;cursor:pointer;
@@ -487,14 +503,14 @@ body{
 
 .fullscreen-overlay .overlay-logo{
   font-family:'Bebas Neue',sans-serif;
-  font-size:64px;color:var(--cat);
+  font-size:64px;color:var(--accent);
   letter-spacing:8px;
 }
 
 .fullscreen-overlay .overlay-text{
   font-family:'Barlow Condensed',sans-serif;
   font-weight:400;font-size:14px;
-  color:var(--border);
+  color:#8A6F74;
   margin-top:16px;
   letter-spacing:3px;
   text-transform:uppercase;
@@ -526,7 +542,6 @@ body{
 .kiosk-mode{cursor:none!important}
 .kiosk-mode *{cursor:none!important}
 
-/* Flame & Smoke Effect */
 .flame-smoke-layer{
   position:fixed;
   bottom:0;
