@@ -29,6 +29,21 @@ app.use(express.urlencoded({ extended: false }));
 let kidsMode = false;
 let anniversaryName: string | null = null;
 
+const mainTheme = {
+  version: "v52",
+  main: {
+    bg: "#1C1416",
+    surface: "#24181B",
+    card: "#2B1D21",
+    border: "#4A3036",
+    accent: "#D01230",
+    cat: "#F4C9CF",
+    itemName: "#F6EEEF",
+    itemDesc: "#C7B0B4",
+    itemPrice: "#E31B3A",
+  },
+};
+
 function titleCase(value: string) {
   return value
     .split(" ")
@@ -49,6 +64,11 @@ function extractAnniversaryName(command: string) {
     .trim();
   return cleaned ? titleCase(cleaned) : "Mazal Tov";
 }
+
+app.get("/api/theme", (_req, res) => {
+  res.set("Cache-Control", "no-store");
+  res.json(mainTheme);
+});
 
 app.get("/api/kids-state", (_req, res) => {
   res.json({ kidsMode });
