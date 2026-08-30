@@ -1,4 +1,6 @@
 (function(){
+  var lastBirthday = undefined;
+
   function isMain2() {
     return /\/screen\/main\/2\b/.test(window.location.pathname);
   }
@@ -59,4 +61,25 @@
     est.textContent = 'EST. 2009';
     strip.appendChild(est);
   };
+
+  async function pollBirthday() {
+    try {
+      var r = await fetch('/api/screen-state', { cache: 'no-store' });
+      if (!r.ok) return;
+      var state = await r.json();
+      var next = state.birthday || null;
+      if (lastBirthday === undefined) {
+        lastBirthday = next;
+        if (next) window.showBirthday(next);
+        return;
+      }
+      if (next === lastBirthday) return;
+      lastBirthday = next;
+      if (next) window.showBirthday(next);
+      else window.stopBirthday();
+    } catch (e) {}
+  }
+
+  setInterval(pollBirthday, 1500);
+  setTimeout(pollBirthday, 800);
 })();
