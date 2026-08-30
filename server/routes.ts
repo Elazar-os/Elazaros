@@ -23,6 +23,7 @@ let screenFeatured: { name: string; description: string; price: string } | null 
 let campfireEnabled = true;
 let closingTime = false;
 let closingVolume = 0.3;
+let birthdayName: string | null = null;
 
 function bumpVersion() {
   screenVersion = Date.now();
@@ -133,7 +134,7 @@ export async function registerRoutes(
       ? path.join(publicPath, fileName)
       : path.join(process.cwd(), 'dist', 'public', fileName);
     if (fs.existsSync(filePath)) {
-      res.set('Cache-Control', 'public, max-age=3600');
+      res.set('Cache-Control', 'no-store, no-cache, must-revalidate');
       res.sendFile(filePath);
     } else {
       res.status(404).json({ error: 'Not found' });
@@ -200,7 +201,9 @@ export async function registerRoutes(
           price = parseFloat(item.price) || 0;
         }
         return {
+          id: item.id,
           item_name: item.name,
+          name: item.name,
           description: item.description,
           price,
           category: item.category,
@@ -320,6 +323,7 @@ export async function registerRoutes(
       invalidateCache();
       await generateStaticMenuJSON();
       bumpVersion();
+      broadcast({ type: 'PRICE_UPDATE', id: item.id, name: item.name, price: item.price, newPrice: item.price });
       broadcast({ type: 'MENU_UPDATE' });
       res.json(item);
     } catch (error: any) {
@@ -583,7 +587,9 @@ export async function registerRoutes(
           price = parseFloat(item.price) || 0;
         }
         return {
+          id: item.id,
           item_name: item.name,
+          name: item.name,
           description: item.description,
           price,
           category: item.category,
@@ -600,7 +606,7 @@ export async function registerRoutes(
   }
 
   app.get('/api/screen-state', (_req, res) => {
-    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled, closingTime, closingVolume });
+    res.json({ version: screenVersion, frozen: screenFrozen, featured: screenFeatured, campfireEnabled, closingTime, closingVolume, birthday: birthdayName });
   });
 
   app.post('/api/refresh-screens', async (_req, res) => {
@@ -637,6 +643,24 @@ export async function registerRoutes(
     }
   });
 
+  app.post('/api/birthday', async (req, res) => {
+    try {
+      const { name, action } = req.body || {};
+      if (action === 'off' || action === 'clear' || action === 'stop') {
+        birthdayName = null;
+        bumpVersion();
+        broadcast({ type: 'BIRTHDAY_CLEAR' });
+        return res.json({ success: true, message: 'Birthday cleared' });
+      }
+      birthdayName = (typeof name === 'string' && name.trim()) ? name.trim() : 'Happy Birthday';
+      bumpVersion();
+      broadcast({ type: 'BIRTHDAY_UPDATE', name: birthdayName });
+      res.json({ success: true, name: birthdayName });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
   app.post('/api/voice-command', async (req, res) => {
     try {
       const { command } = req.body;
@@ -660,6 +684,20 @@ export async function registerRoutes(
         bumpVersion();
         broadcast({ type: 'CONFIG_UPDATE', config });
         return res.json({ success: true, action: 'theme_changed', config, message: `Switched to ${parsed.theme} theme` });
+      }
+
+      if (parsed.type === 'birthday') {
+        if (parsed.action === 'off') {
+          birthdayName = null;
+          bumpVersion();
+          broadcast({ type: 'BIRTHDAY_CLEAR' });
+          return res.json({ success: true, action: 'birthday_clear', message: 'Birthday cleared' });
+        }
+        birthdayName = parsed.name || 'Happy Birthday';
+        bumpVersion();
+        broadcast({ type: 'BIRTHDAY_UPDATE', name: birthdayName });
+        const label = birthdayName === 'Happy Birthday' ? 'Happy Birthday' : `Happy Birthday ${birthdayName}`;
+        return res.json({ success: true, action: 'birthday', name: birthdayName, message: label });
       }
       
       if (parsed.type === 'disable' || parsed.type === 'enable') {
@@ -706,6 +744,7 @@ export async function registerRoutes(
         invalidateCache();
         await generateStaticMenuJSON();
         bumpVersion();
+        broadcast({ type: 'PRICE_UPDATE', id: match.item.id, name: match.item.name, price: priceValue, newPrice: priceValue });
         broadcast({ type: 'MENU_UPDATE' });
         
         return res.json({ 
@@ -755,7 +794,7 @@ export async function registerRoutes(
         });
       }
       
-      return res.json({ success: false, message: 'Command not recognized. Try "86 Dragon Roll" or "change price of M22 Roll to 15"' });
+      return res.json({ success: false, message: 'Command not recognized. Try "86 Dragon Roll" or "play birthday for Sarah"' });
     } catch (error: any) {
       console.error('Voice command error:', error);
       res.status(500).json({ error: error.message });
