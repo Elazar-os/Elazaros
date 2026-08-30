@@ -1,47 +1,44 @@
 (function(){
   var lastKey = '';
 
+  function ensureStyle() {
+    var el = document.getElementById('kod-live-theme');
+    if (el) return el;
+    el = document.createElement('style');
+    el.id = 'kod-live-theme';
+    document.head.appendChild(el);
+    return el;
+  }
+
   function applyTheme(theme) {
     if (!theme || document.body.classList.contains('theme-sushi')) return;
-    var root = document.body;
-    var map = {
-      bg: '--bg',
-      surface: '--surface',
-      card: '--card',
-      border: '--border',
-      accent: '--accent',
-      cat: '--cat',
-      itemName: '--item-name',
-      itemDesc: '--item-desc',
-      itemPrice: '--item-price'
-    };
-    Object.keys(map).forEach(function(key) {
-      if (theme[key]) root.style.setProperty(map[key], theme[key]);
-    });
-    document.documentElement.style.background = theme.bg || '';
-    var wrap = document.querySelector('.screen-wrap');
-    if (wrap && theme.bg) {
-      wrap.style.background = 'radial-gradient(ellipse at 50% 0%, rgba(208,18,48,0.14), transparent 46%), ' + theme.bg;
-    }
-    document.querySelectorAll('.panel, .kod-brand-strip').forEach(function(el) {
-      el.style.background = theme.card || '';
-      el.style.borderColor = theme.border || '';
-    });
-    document.querySelectorAll('.panel-title').forEach(function(el) {
-      el.style.color = theme.cat || '';
-    });
-    document.querySelectorAll('.mi-name').forEach(function(el) {
-      el.style.color = theme.itemName || '';
-    });
-    document.querySelectorAll('.mi-price').forEach(function(el) {
-      el.style.color = theme.itemPrice || '';
-    });
-    var header = document.querySelector('.screen-header');
-    var footer = document.querySelector('.screen-footer');
-    if (header && theme.surface) header.style.background = theme.surface;
-    if (footer && theme.surface) footer.style.background = theme.surface;
-    var logo = document.getElementById('header-logo');
-    if (logo && theme.accent) logo.style.color = theme.accent;
+    var t = theme;
+    ensureStyle().textContent = [
+      'body.theme-main{',
+      '--bg:' + t.bg + ';',
+      '--surface:' + t.surface + ';',
+      '--card:' + t.card + ';',
+      '--border:' + t.border + ';',
+      '--accent:' + t.accent + ';',
+      '--cat:' + t.cat + ';',
+      '--item-name:' + t.itemName + ';',
+      '--item-desc:' + t.itemDesc + ';',
+      '--item-price:' + t.itemPrice + ';',
+      'background:' + t.bg + ';',
+      '}',
+      'body.theme-main .screen-wrap{background:' + t.bg + ';}',
+      'body.theme-main .screen-header,body.theme-main .screen-footer{background:' + t.surface + ';}',
+      'body.theme-main .panel,body.theme-main .kod-brand-strip{',
+      'background:' + t.card + ';',
+      'border:1px solid ' + t.border + ';',
+      'box-shadow:none;',
+      '}',
+      'body.theme-main .panel-title{color:' + t.cat + ';text-shadow:0 1px 2px rgba(0,0,0,.55);}',
+      'body.theme-main .mi-name{color:' + t.itemName + ';text-shadow:0 1px 2px rgba(0,0,0,.65);}',
+      'body.theme-main .mi-price{color:' + t.itemPrice + ';text-shadow:0 1px 2px rgba(0,0,0,.55);}',
+      'body.theme-main .header-logo,body.theme-main .kod-brand-logo,body.theme-main .footer-brand{color:' + t.accent + ';}',
+      'body.theme-main #kod-bg-ambient{display:none;}'
+    ].join('');
   }
 
   function swapStylesheet(version) {
