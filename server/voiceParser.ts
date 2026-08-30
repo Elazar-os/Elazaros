@@ -61,21 +61,25 @@ function extractTheme(cmd: string): string {
 }
 
 function detectCampfireIntent(cmd: string): boolean {
-  return /\b(campfire|fire)\b/i.test(cmd) && /\b(on|off|turn|start|stop|light|extinguish|shut)\b/i.test(cmd);
+  return /\b(campfire|camp fire|fire|flame|flames)\b/i.test(cmd);
 }
 
 function extractCampfireAction(cmd: string): 'on' | 'off' {
-  if (/\b(off|stop|extinguish|turn off|shut|shut off)\b/i.test(cmd)) return 'off';
+  if (/\b(off|stop|extinguish|out|hide|disable|kill)\b/i.test(cmd)) return 'off';
   return 'on';
 }
 
 function detectClosingIntent(cmd: string): boolean {
-  return (/\b(close|closing|shut down|end of day)\b/i.test(cmd) && /\b(store|shop|restaurant|time)\b/i.test(cmd)) ||
-         /\b(shut off|turn off|stop)\b/i.test(cmd) && /\b(music|song|audio)\b/i.test(cmd);
+  return /\bclosing\s*time\b/i.test(cmd) ||
+         /\b(close|closing)\b/i.test(cmd) && /\b(store|shop|restaurant|time|music|song|audio)\b/i.test(cmd) ||
+         /\b(end of day|shut down)\b/i.test(cmd) ||
+         /\bplay\s+(the\s+)?closing\b/i.test(cmd) ||
+         /\b(shut off|turn off|stop)\b/i.test(cmd) && /\b(music|song|audio|closing)\b/i.test(cmd);
 }
 
 function extractClosingAction(cmd: string): 'on' | 'off' {
-  if (/\b(open|reopen|cancel|stop|shut off|turn off)\b/i.test(cmd)) return 'off';
+  if (/\b(cancel|reopen|open the store|open store)\b/i.test(cmd)) return 'off';
+  if (/\b(stop|shut off|turn off|stop playing)\b/i.test(cmd) && !/\b(start|play|turn on)\b/i.test(cmd)) return 'off';
   return 'on';
 }
 
