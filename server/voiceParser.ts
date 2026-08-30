@@ -8,6 +8,7 @@ export type VoiceIntent =
   | { type: 'campfire'; action: 'on' | 'off' }
   | { type: 'closing'; action: 'on' | 'off' }
   | { type: 'birthday'; action: 'on' | 'off'; name: string }
+  | { type: 'kids'; action: 'on' | 'off' }
   | { type: 'volume'; volume: number }
   | { type: 'unknown'; raw: string };
 
@@ -20,6 +21,10 @@ export function parseVoiceCommand(raw: string): VoiceIntent {
 
   if (detectBirthdayIntent(command)) {
     return { type: 'birthday', action: extractBirthdayAction(command), name: extractBirthdayName(command) };
+  }
+
+  if (detectKidsIntent(command)) {
+    return { type: 'kids', action: extractKidsAction(command) };
   }
   
   if (detectCampfireIntent(command)) {
@@ -84,6 +89,15 @@ function extractBirthdayName(cmd: string): string {
     .trim();
   if (!name) return 'Happy Birthday';
   return name.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+}
+
+function detectKidsIntent(cmd: string): boolean {
+  return /\bkids?\s*(mode|hour|menu)\b/i.test(cmd) || /\b(kid mode|kids hour)\b/i.test(cmd);
+}
+
+function extractKidsAction(cmd: string): 'on' | 'off' {
+  if (/\b(off|stop|end|cancel|clear|done)\b/i.test(cmd)) return 'off';
+  return 'on';
 }
 
 function detectCampfireIntent(cmd: string): boolean {
