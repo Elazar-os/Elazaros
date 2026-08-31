@@ -105,6 +105,7 @@ function detectCampfireIntent(cmd: string): boolean {
 }
 
 function extractCampfireAction(cmd: string): 'on' | 'off' {
+  if (/\b(on|start|light|show|enable|back)\b/i.test(cmd)) return 'on';
   if (/\b(off|stop|extinguish|out|hide|disable|kill)\b/i.test(cmd)) return 'off';
   return 'on';
 }
