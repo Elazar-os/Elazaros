@@ -26,8 +26,36 @@ app.use(
 
 app.use(express.urlencoded({ extended: false }));
 
+const KIDS_MODE_MS = 5 * 60 * 1000;
+
 let kidsMode = false;
+let kidsEndsAt: number | null = null;
+let kidsTimer: ReturnType<typeof setTimeout> | null = null;
 let anniversaryName: string | null = null;
+
+function clearKidsTimer() {
+  if (kidsTimer) {
+    clearTimeout(kidsTimer);
+    kidsTimer = null;
+  }
+}
+
+function setKidsMode(on: boolean) {
+  clearKidsTimer();
+  kidsMode = !!on;
+  if (kidsMode) {
+    kidsEndsAt = Date.now() + KIDS_MODE_MS;
+    kidsTimer = setTimeout(() => {
+      kidsMode = false;
+      kidsEndsAt = null;
+      kidsTimer = null;
+      log("Kids hour auto-off after 5 minutes", "kids");
+    }, KIDS_MODE_MS);
+  } else {
+    kidsEndsAt = null;
+  }
+  return kidsMode;
+}
 
 const mainTheme = {
   version: "v55",
@@ -71,13 +99,19 @@ app.get("/api/theme", (_req, res) => {
 });
 
 app.get("/api/kids-state", (_req, res) => {
-  res.json({ kidsMode });
+  res.json({ kidsMode, endsAt: kidsEndsAt });
 });
 
 app.post("/api/kids", (req, res) => {
   const action = String(req.body?.action || "on");
-  kidsMode = action !== "off" && action !== "stop" && action !== "clear";
-  res.json({ success: true, kidsMode, message: kidsMode ? "Kids hour on" : "Kids hour off" });
+  const on = action !== "off" && action !== "stop" && action !== "clear";
+  setKidsMode(on);
+  res.json({
+    success: true,
+    kidsMode,
+    endsAt: kidsEndsAt,
+    message: kidsMode ? "Kids hour on for 5 minutes" : "Kids hour off",
+  });
 });
 
 app.get("/api/anniversary-state", (_req, res) => {
@@ -113,12 +147,13 @@ app.post("/api/voice-command", (req, res, next) => {
     return next();
   }
   const off = /\b(off|stop|end|cancel|clear|done)\b/.test(command);
-  kidsMode = !off;
+  setKidsMode(!off);
   return res.json({
     success: true,
     action: "kids_mode",
     enabled: kidsMode,
-    message: kidsMode ? "Kids hour on" : "Kids hour off",
+    endsAt: kidsEndsAt,
+    message: kidsMode ? "Kids hour on for 5 minutes" : "Kids hour off",
   });
 });
 
