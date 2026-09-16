@@ -2,10 +2,10 @@
   command = "npm run build"
   publish = "dist/public"
 
-# Redirect API calls to Render
+# Route API calls through the Netlify serverless function
 [[redirects]]
   from = "/api/*"
-  to = "https://YOUR-RENDER-APP-NAME.onrender.com/api/:splat"
+  to = "/.netlify/functions/api/:splat"
   status = 200
   force = true
 
