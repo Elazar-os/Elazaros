@@ -209,34 +209,43 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getConfig(): Promise<ConfigData> {
-    if (isCacheValid(cache.config)) {
-      return cache.config.data;
-    }
-    const rows = await db.select().from(appConfig);
     const config: ConfigData = {
       activeTemplate: "classicBoard",
       activeTheme: "delanceyClassic",
       sushiTheme: "sushi-classic",
       mainTheme: "main-midnight",
     };
-    for (const row of rows) {
-      if (row.key === "activeTemplate") config.activeTemplate = row.value;
-      if (row.key === "activeTheme") config.activeTheme = row.value;
-      if (row.key === "sushiTheme") config.sushiTheme = row.value;
-      if (row.key === "mainTheme") config.mainTheme = row.value;
+    if (isCacheValid(cache.config)) {
+      return cache.config.data;
     }
-    cache.config = { data: config, timestamp: Date.now() };
-    return config;
+    try {
+      const rows = await db.select().from(appConfig);
+      for (const row of rows) {
+        if (row.key === "activeTemplate") config.activeTemplate = row.value;
+        if (row.key === "activeTheme") config.activeTheme = row.value;
+        if (row.key === "sushiTheme") config.sushiTheme = row.value;
+        if (row.key === "mainTheme") config.mainTheme = row.value;
+      }
+      cache.config = { data: config, timestamp: Date.now() };
+      return config;
+    } catch (err) {
+      console.error("[Config] getConfig failed, using defaults:", err);
+      return config;
+    }
   }
 
   async setConfig(key: string, value: string): Promise<void> {
-    const existing = await db.select().from(appConfig).where(eq(appConfig.key, key));
-    if (existing.length > 0) {
-      await db.update(appConfig).set({ value }).where(eq(appConfig.key, key));
-    } else {
-      await db.insert(appConfig).values({ key, value });
+    try {
+      const existing = await db.select().from(appConfig).where(eq(appConfig.key, key));
+      if (existing.length > 0) {
+        await db.update(appConfig).set({ value }).where(eq(appConfig.key, key));
+      } else {
+        await db.insert(appConfig).values({ key, value });
+      }
+      cache.config = null;
+    } catch (err) {
+      console.error("[Config] setConfig failed:", err);
     }
-    cache.config = null;
   }
 
   async updateConfig(config: Partial<ConfigData>): Promise<ConfigData> {
