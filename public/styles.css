@@ -30,77 +30,61 @@ body{
 *{scrollbar-width:none!important;-ms-overflow-style:none!important}
 
 .theme-main{
-  --bg:#0B0D12;
-  --surface:rgba(17,20,27,0.78);
-  --card:rgba(255,255,255,0.045);
-  --border:rgba(255,255,255,0.16);
-  --border-soft:rgba(255,255,255,0.08);
+  --bg:#F7F7F7;
+  --surface:#FFFFFF;
+  --card:#FFFFFF;
+  --border:#E8E8E8;
+  --border-soft:rgba(0,0,0,0.06);
   --accent:#C8102E;
-  --accent-glow:rgba(200,16,46,0.12);
-  --cat:#FFFFFF;
-  --item-name:#F5F6FA;
-  --item-desc:#A9AFBD;
-  --item-price:#FF536B;
+  --accent-glow:rgba(200,16,46,0.08);
+  --cat:#C8102E;
+  --item-name:#111111;
+  --item-desc:#555555;
+  --item-price:#C8102E;
 }
 
 .theme-sushi{
-  --bg:#08100C;
-  --surface:rgba(15,26,18,0.78);
-  --card:rgba(255,255,255,0.045);
-  --border:rgba(255,255,255,0.15);
-  --border-soft:rgba(255,255,255,0.07);
+  --bg:#070F0A;
+  --surface:#0F1A12;
+  --card:#152018;
+  --border:#243828;
+  --border-soft:rgba(255,255,255,0.04);
   --accent:#2D9E6B;
-  --accent-glow:rgba(45,158,107,0.13);
-  --cat:#F1FFF7;
-  --item-name:#EAF7EF;
-  --item-desc:#A8C4B0;
-  --item-price:#F4C95D;
+  --accent-glow:rgba(45,158,107,0.11);
+  --cat:#E8F5EE;
+  --item-name:#E8F5EE;
+  --item-desc:#A8C4A6;
+  --item-price:#F0C040;
 }
 
 .screen-wrap{
   width:100%;height:100vh;
   display:flex;flex-direction:column;
-  background:
-    radial-gradient(circle at 12% 0%,var(--accent-glow),transparent 34%),
-    radial-gradient(circle at 88% 100%,rgba(107,124,255,0.05),transparent 30%),
-    var(--bg);
+  background:var(--bg);
   overflow:hidden;
-  position:relative;
 }
-.screen-wrap::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(180deg,rgba(255,255,255,0.025),transparent 24%,transparent 78%,rgba(255,255,255,0.018));
-  pointer-events:none;
-  z-index:0;
-}
-.screen-header,.screen-body,.screen-footer{position:relative;z-index:1;}
 
 .screen-header{
   height:68px;min-height:68px;max-height:68px;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 24px;
-  border-bottom:1px solid var(--border);
+  border-bottom:3px solid var(--accent);
   background:var(--surface);
-  backdrop-filter:blur(24px) saturate(140%);
-  -webkit-backdrop-filter:blur(24px) saturate(140%);
-  box-shadow:0 10px 30px rgba(0,0,0,0.18),inset 0 1px 0 rgba(255,255,255,0.06);
   flex-shrink:0;
 }
 
 .header-left{display:flex;align-items:center;gap:0}
-.header-logo{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--cat);letter-spacing:5px;line-height:1;text-shadow:0 0 18px var(--accent-glow)}
+.header-logo{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--cat);letter-spacing:5px;line-height:1}
 .header-pipe{font-family:'Barlow Condensed',sans-serif;font-weight:300;font-size:24px;color:var(--border);margin:0 12px}
 .header-subtitle{font-family:'Barlow Condensed',sans-serif;font-weight:300;font-size:18px;color:var(--border);letter-spacing:2px;text-transform:uppercase}
 .header-right{display:flex;align-items:center;gap:10px}
 .header-screen-id{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;color:var(--border);text-transform:uppercase;letter-spacing:2.5px}
-.live-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--border);border-radius:999px;background:rgba(255,255,255,0.045);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);box-shadow:inset 0 1px 0 rgba(255,255,255,0.07)}
+.live-pill{display:flex;align-items:center;gap:6px;padding:3px 8px;border:1px solid var(--border);border-radius:12px}
 .pulse-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s ease-in-out infinite}
 .live-text{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:9px;color:var(--border);letter-spacing:2px;text-transform:uppercase}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.85)}}
 
-.screen-body{flex:1;display:grid;gap:10px;padding:10px;background:transparent;overflow:hidden;min-height:0}
+.screen-body{flex:1;display:grid;gap:8px;padding:8px;background:var(--bg);overflow:hidden;min-height:0}
 .screen-footer{height:32px;min-height:32px;max-height:32px;display:flex;align-items:center;padding:0 20px;background:var(--surface);border-top:1px solid var(--border);flex-shrink:0;overflow:hidden}
 .footer-clock{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;color:var(--border);white-space:nowrap;min-width:90px}
 .footer-ticker-wrap{flex:1;overflow:hidden;position:relative;margin:0 16px;mask-image:linear-gradient(to right,transparent,black 40px,black calc(100% - 40px),transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 40px,black calc(100% - 40px),transparent)}
@@ -118,9 +102,7 @@ body{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);
   border-radius:14px;
-  box-shadow:0 12px 34px rgba(0,0,0,0.28),inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter:blur(18px) saturate(125%);
-  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 20px rgba(174,49,54,0.12);
   padding:20px;
   display:flex;flex-direction:column;
   overflow:hidden;
@@ -128,7 +110,7 @@ body{
   min-height:0;
   animation:panelGlow 14s ease-in-out infinite;
 }
-.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:72px;background:linear-gradient(to bottom,var(--accent-glow),transparent);pointer-events:none;z-index:1}
+.panel::before{content:'';position:absolute;top:0;left:0;right:0;height:50px;background:linear-gradient(to bottom,var(--accent-glow),transparent);pointer-events:none;z-index:1}
 .panel-header{padding:8px 14px 4px;flex-shrink:0;position:relative;z-index:2}
 .panel-title{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--cat);letter-spacing:2.5px;line-height:1;text-transform:uppercase}
 .panel-subtitle{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;color:var(--border);letter-spacing:2.5px;text-transform:uppercase;margin-top:2px}
@@ -161,12 +143,10 @@ body{
 .layout-sushi2{grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr;gap:8px}
 
 .kod-brand-strip{
-  background:rgba(255,255,255,0.045);
-  border:1px solid rgba(255,255,255,0.10);
-  border-radius:16px;
-  box-shadow:0 12px 34px rgba(0,0,0,0.28),inset 0 1px 0 rgba(255,255,255,0.06);
-  backdrop-filter:blur(18px) saturate(125%);
-  -webkit-backdrop-filter:blur(18px) saturate(125%);
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.4),inset 0 0 20px rgba(174,49,54,0.12);
   padding:20px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   overflow:hidden;position:relative;
