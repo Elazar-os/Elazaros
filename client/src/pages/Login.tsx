@@ -123,7 +123,7 @@ export default function Login() {
                     value={password}
                     onChange={(event) => setPassword(event.target.value)}
                     autoComplete="current-password"
-                    className="h-11 bg-[#111111] border-[#2A2A2A] text-[#F5F0EB]"
+                    className="h-12 rounded-2xl bg-white/[0.045] border-white/10 text-[#F5F0EB] placeholder:text-white/30 backdrop-blur-xl shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] focus:border-white/25 focus:bg-white/[0.07] focus:ring-2 focus:ring-[#6B7CFF]/30 focus:shadow-[0_0_0_1px_rgba(107,124,255,0.16),inset_0_1px_0_rgba(255,255,255,0.08)]"
                     placeholder="Enter your password"
                     data-testid="input-password"
                     required
