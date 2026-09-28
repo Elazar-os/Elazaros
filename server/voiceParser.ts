@@ -134,5 +134,101 @@ function detectClosingIntent(cmd: string): boolean {
 
 function extractClosingAction(cmd: string): 'on' | 'off' {
   if (/\b(cancel|reopen|open the store|open store)\b/i.test(cmd)) return 'off';
+  if (/\b(stop|shut off|turn off|stop playing)\b/i.test(cmd) && !/\b(start|play|turn on)\b/i.test(cmd)) return 'off';
   return 'on';
+}
+
+function detectVolumeIntent(cmd: string): boolean {
+  return /\b(volume|louder|quieter|sound)\b/i.test(cmd) && /\d+/i.test(cmd);
+}
+
+function extractVolume(cmd: string): number {
+  const match = cmd.match(/\b(\d+)\s*(?:%|percent)?\b/i);
+  if (match) {
+    return parseInt(match[1]);
+  }
+  return 50;
+}
+
+function detect86Intent(cmd: string): boolean {
+  return /\b(86|eighty[\s-]?six|disable|turn off|remove)\b/i.test(cmd);
+}
+
+function extractItemName86(cmd: string): string {
+  let item = cmd
+    .replace(/\b(86|eighty[\s-]?six|disable|turn off|remove)\b/gi, '')
+    .replace(/\b(the|item|please|can you|could you)\b/gi, '')
+    .trim();
+  return cleanItemName(item);
+}
+
+function detectEnableIntent(cmd: string): boolean {
+  return /\b(bring back|enable|turn on|un[\s-]?86|add back)\b/i.test(cmd);
+}
+
+function extractItemNameEnable(cmd: string): string {
+  let item = cmd
+    .replace(/\b(bring back|enable|turn on|un[\s-]?86|add back)\b/gi, '')
+    .replace(/\b(the|item|please|can you|could you)\b/gi, '')
+    .trim();
+  return cleanItemName(item);
+}
+
+function detectPriceIntent(cmd: string): boolean {
+  return /\b(change|set|update|make)\b.*\b(price|cost)\b/i.test(cmd) ||
+         /\bprice\b.*\bto\b/i.test(cmd) ||
+         /\$\d+/i.test(cmd);
+}
+
+function extractPriceInfo(cmd: string): { itemName: string; price: string } {
+  const toMatch = cmd.match(/\bto\s+\$?\s*(\d+(?:\.\d{1,2})?)/i);
+  const forMatch = cmd.match(/\bfor\s+\$?\s*(\d+(?:\.\d{1,2})?)/i);
+  const dollarMatch = cmd.match(/\$\s*(\d+(?:\.\d{1,2})?)/);
+  const dollarWordMatch = cmd.match(/(\d+(?:\.\d{1,2})?)\s*dollars?/i);
+  
+  const price = toMatch ? toMatch[1] : 
+                forMatch ? forMatch[1] : 
+                dollarMatch ? dollarMatch[1] : 
+                dollarWordMatch ? dollarWordMatch[1] : '0';
+  
+  let itemName = cmd
+    .replace(/\b(change|set|update|make)\b/gi, '')
+    .replace(/\b(price|cost)\b/gi, '')
+    .replace(/\bto\s+\$?\s*\d+(?:\.\d{1,2})?\s*(?:dollars?)?/gi, '')
+    .replace(/\bfor\s+\$?\s*\d+(?:\.\d{1,2})?\s*(?:dollars?)?/gi, '')
+    .replace(/\$\s*\d+(?:\.\d{1,2})?/g, '')
+    .replace(/\d+(?:\.\d{1,2})?\s*dollars?/gi, '')
+    .replace(/\b(the|of|please|can you|could you)\b/gi, '')
+    .trim();
+  
+  return { itemName: cleanItemName(itemName), price };
+}
+
+function cleanItemName(name: string): string {
+  return name
+    .replace(/\s+/g, ' ')
+    .replace(/roll$/i, ' Roll')
+    .trim()
+    .split(' ')
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+}
+
+export function findBestMatch(searchName: string, items: { id: number; name: string }[]): { item: { id: number; name: string } | null; confidence: number } {
+  if (!searchName || items.length === 0) {
+    return { item: null, confidence: 0 };
+  }
+  
+  const itemNames = items.map(i => i.name.toLowerCase());
+  const search = searchName.toLowerCase();
+  
+  const result = stringSimilarity.findBestMatch(search, itemNames);
+  const bestMatch = result.bestMatch;
+  
+  if (bestMatch.rating >= 0.4) {
+    const matchedItem = items[result.bestMatchIndex];
+    return { item: matchedItem, confidence: bestMatch.rating };
+  }
+  
+  return { item: null, confidence: bestMatch.rating };
 }
