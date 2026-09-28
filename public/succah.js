@@ -1,7 +1,7 @@
 (function () {
   var deco = 'campfire';
   var enabled = true;
-  var ART = 'v2';
+  var ART = 'v3';
 
   function isMain2() {
     return /\/screen\/main\/2\b/.test(location.pathname);
@@ -22,10 +22,9 @@
       + '<rect x="80" y="108" width="60" height="84" fill="url(#glow)" stroke="#3a2212" stroke-width="4"/>'
       + '<path d="M84 118 H136 M84 130 H136 M84 142 H136 M84 154 H136 M84 166 H136" stroke="#d9922a" stroke-width="2" opacity="0.45"/>'
       + '<rect x="42" y="84" width="136" height="16" fill="#8b5a2b" stroke="#3a2212" stroke-width="3"/>'
-      + '<path d="M18 96 C40 40 70 58 90 78 C100 40 120 40 130 78 C150 50 180 40 202 96 C170 78 150 88 130 84 C120 88 100 88 90 84 C70 90 44 80 18 96Z" fill="#3fa13a" stroke="#1d5a22" stroke-width="3"/>'
-      + '<path d="M28 88 C50 62 72 70 88 84" fill="#58c04a" stroke="#1d5a22" stroke-width="2"/>'
-      + '<path d="M132 84 C150 68 176 62 196 88" fill="#58c04a" stroke="#1d5a22" stroke-width="2"/>'
-      + '<path d="M70 54 C86 44 102 48 110 70 C118 48 136 44 150 54 C138 66 122 70 110 66 C98 70 82 66 70 54Z" fill="#2f8f32" stroke="#1d5a22" stroke-width="3"/>'
+      + '<path d="M36 88 C58 70 78 74 96 84 C110 72 130 72 148 84 C166 74 186 70 206 88 C184 86 166 90 148 88 C130 92 110 92 96 88 C78 92 56 88 36 88Z" fill="#3fa13a" stroke="#1d5a22" stroke-width="3"/>'
+      + '<path d="M52 86 C70 76 88 80 102 86" fill="#58c04a" stroke="#1d5a22" stroke-width="2"/>'
+      + '<path d="M118 86 C136 76 158 76 176 86" fill="#58c04a" stroke="#1d5a22" stroke-width="2"/>'
       + '<g fill="none" stroke-width="7" stroke-linecap="round">'
       + '<circle cx="86" cy="118" r="8" stroke="#ff4fa3"/>'
       + '<circle cx="100" cy="126" r="8" stroke="#3fcf4a"/>'
