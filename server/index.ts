@@ -34,6 +34,8 @@ let kidsMode = false;
 let kidsEndsAt: number | null = null;
 let kidsTimer: ReturnType<typeof setTimeout> | null = null;
 let anniversaryName: string | null = null;
+let decoration: "campfire" | "succah" = "campfire";
+let decorationEnabled = true;
 
 function clearKidsTimer() {
   if (kidsTimer) {
@@ -131,8 +133,35 @@ app.post("/api/anniversary", (req, res) => {
   res.json({ success: true, name: anniversaryName, message: `MAZAL TOV ${anniversaryName}` });
 });
 
+app.get("/api/kod-decoration", (_req, res) => {
+  res.set("Cache-Control", "no-store");
+  res.json({ decoration, enabled: decorationEnabled });
+});
+
 app.post("/api/voice-command", (req, res, next) => {
   const command = String(req.body?.command || "").toLowerCase();
+
+  if (/\b(succah|sukkah|succa|succos|sukkot|sukkos)\b/.test(command)) {
+    const off = /\b(off|stop|hide|disable|end|clear)\b/.test(command);
+    if (off) {
+      decorationEnabled = false;
+      return res.json({ success: true, action: "succah_toggled", enabled: false, decoration, message: "Succah off" });
+    }
+    decoration = "succah";
+    decorationEnabled = true;
+    return res.json({ success: true, action: "succah_toggled", enabled: true, decoration: "succah", message: "Succah on" });
+  }
+
+  if (/\b(campfire|camp fire|fire|flame|flames)\b/.test(command)) {
+    const off = /\b(off|stop|extinguish|out|hide|disable|kill)\b/.test(command)
+      && !/\b(on|start|light|show|enable|back)\b/.test(command);
+    if (off) {
+      decorationEnabled = false;
+    } else {
+      decoration = "campfire";
+      decorationEnabled = true;
+    }
+  }
 
   if (/\b(anniversary|mazal\s*tov|mazel\s*tov)\b/.test(command)) {
     const off = /\b(stop|cancel|clear|end|off|done)\b/.test(command);
