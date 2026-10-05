@@ -1,0 +1,2 @@
+Restart to reload menu cache after egg rolls were disabled in Supabase.
+2026-10-05
