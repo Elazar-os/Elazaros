@@ -121,10 +121,10 @@ body{
 .items-page{display:flex;flex-direction:column;position:absolute;top:0;left:14px;right:14px;opacity:0;transform:translateY(6px);transition:opacity 0.7s ease,transform 0.7s ease;pointer-events:none}
 .items-page.active{opacity:1;transform:translateY(0);position:relative;left:0;right:0;width:100%;pointer-events:auto}
 .items-page.fade-out{opacity:0;transform:translateY(-6px);position:absolute;left:14px;right:14px}
-.menu-item{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:6px 0;border-bottom:1px solid var(--border-soft)}
+.menu-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid var(--border-soft)}
 .menu-item:last-child{border-bottom:none}
 .mi-info{flex:1;min-width:0}
-.mi-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:30px;color:var(--item-name);letter-spacing:0.4px;line-height:1.15}
+.mi-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:26px;color:var(--item-name);letter-spacing:0.2px;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .mi-desc{display:none}
 .mi-price{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--item-price);letter-spacing:0.5px;flex-shrink:0;text-align:right;white-space:nowrap;line-height:1}
 .mi-price.rotating{transition:opacity 0.3s ease}
